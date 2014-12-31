@@ -1,0 +1,30 @@
+{
+  "name": "wpt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.10.0",
+    "express": "^4.10.6",
+    "webpagetest": "^0.3.1",
+    "mongoose": "^3.8.21",
+    "handlebars": "^2.0.0",
+    "express3-handlebars": "^0.5.2",
+    "fs":"*"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://54a3b670fcf93399050000a7@mpsdemo-cmills83.rhcloud.com/~/git/mpsdemo.git/"
+  },
+  "author": "Chris Mills",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chrismillsnbcu/MPS-speed-test/issues"
+  },
+  "homepage": "https://github.com/chrismillsnbcu/MPS-speed-test"
+}

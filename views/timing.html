@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>MPS Demo - Waterfall & Timing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/css/foundation.min.css"/>
+  <link rel="stylesheet" href="/css/styles.css"/>
+
+  <!-- Site variables -->
+  <script>
+    // TODO - make har url dynamic based on url input.
+    var mpsDemo = {
+      site: 'NBCNews.com',
+      harUrl: '../harp/nbcnews_12_22_14.harp',
+      adLibrary: 'gpt',
+      adNetwork: 'doubleclick'
+    }
+  </script>
+
+</head>
+<body>
+
+<nav class="top-bar" data-topbar role="navigation">
+  <ul class="title-area">
+    <li class="name">
+      <h1><a href="#"><script>document.write(mpsDemo.site);</script> Site Waterfall</a></h1>
+    </li>
+  </ul>
+  <section class="top-bar-section">
+    <ul class="right">
+      <li><a href="/MPS-demo/">Demo</a></li>
+      <li class="active"><a href="/MPS-demo/timing/">Timing</a></li>
+    </ul>
+  </section>
+</nav>
+
+<div class="large-12 content m0auto">
+
+  <h1 class="mt20">MPS Demo</h1>
+
+  <!-- Graphs -->
+  <div id="graph" class="loading">
+    <div id="graph-all" class="w50"></div>
+    <div id="graph-js" class="w50"></div>
+  </div>
+
+  <div class="none" id="content">
+
+    <!-- Load Times -->
+    <div class="panel">
+      <h3>Results for <script>document.write(mpsDemo.site);</script></h3>
+      <div class="panel-results"></div>
+      <!--<p>Data is based on a file generated 12/19/2014, visit Web Page Test for a site waterfall in real time.<p>
+      <a class="button" href="http://www.webpagetest.org/" target=" _blank">Web Page Test</a>-->
+      <p>Results provided by the <a href="http://www.webpagetest.org/" target=" _blank">Web Page Test</a> API</p>
+    </div>
+    <!-- /Load Times -->
+
+    <!-- Charts -->
+    <ul class="button-group radius borderBtm">
+      <li><a href="#" class="button tabs-js">Javascript</a></li>
+      <li><a href="#" class="button tabs-all secondary">All Files</a></li>
+      <li class="right"><p class="pt10"><em>All time is in milliseconds.</em></p></li>
+    </ul>
+
+    <div class="tabs">
+
+      <table id="chart-all" class="none chart" width="100%">
+        <thead>
+        <th width="705">File Path</th>
+        <th width="250">File Type</th>
+        <th width="75">Blocked</th>
+        <th width="50">Wait</th>
+        <th width="75">Load Time</th>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+
+      <table id="chart-js" class="chart" width="100%">
+        <thead>
+        <th width="705">File Path</th>
+        <th width="250">File Type</th>
+        <th width="75">Blocked</th>
+        <th width="50">Wait</th>
+        <th width="75">Load Time</th>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+
+    </div>
+    <!-- /Charts -->
+
+  </div>
+
+</div>
+
+<footer>
+  <div class="large-12 content m0auto">
+    <hr />
+    <p class="secondary">&copy; 2014, MPS Waterfall and Timing Demo.</p>
+  </div>
+</footer>
+
+<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/jquery.tablesorter.min.js"></script>
+<script src="/js/highcharts.min.js"></script>
+<script src="/js/site.js"></script>
+
+<script>
+  $(document).ready(function() {
+
+    $('#graph').append('<p>Requesting site speed test...</p>');
+
+    // Start page speed test to get .har results.
+    $.ajax({
+      type: 'GET',
+      url: '/api/site',
+      success: function(d) {
+        pageSpeedStatus(d.urls.data.jsonUrl, d.urls.data.testId);
+        $('#graph p').html('Running site speed test, this may take up to 30 seconds.');
+      },
+      error: function(d) {
+        console.log(d);
+      }
+    });
+
+  });
+</script>
+
+</body>
+</html>
