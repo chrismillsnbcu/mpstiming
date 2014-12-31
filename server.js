@@ -68,7 +68,6 @@ app.get('/api/site', function(req, res) {
 
 });
 
-
 /**** DEMO *****/
 var hbs = require('hbs');
 
@@ -84,7 +83,6 @@ app.get('/test', function(req, res) {
   });
 });
 /**** /DEMO *****/
-
 
 /***** Start App *****/
 var server_port = process.env.OPENSHIFT_NODEJS_PORT || 5000;
