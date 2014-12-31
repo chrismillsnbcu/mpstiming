@@ -68,6 +68,24 @@ app.get('/api/site', function(req, res) {
 
 });
 
+
+/**** DEMO *****/
+var hbs = require('hbs');
+
+app.engine('hbs', hbs.__express);
+app.engine('html', hbs.__express);
+app.set('view engine', 'hbs');
+app.set('views', __dirname + '/views');
+hbs.localsAsTemplateData(app);
+
+app.get('/test', function(req, res) {
+  res.render('test.html', {
+    message: 'Homepage!'
+  });
+});
+/**** /DEMO *****/
+
+
 /***** Start App *****/
 var server_port = process.env.OPENSHIFT_NODEJS_PORT || 5000;
 var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';

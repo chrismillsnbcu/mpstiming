@@ -1,7 +1,7 @@
 {
   "name": "wpt",
   "version": "1.0.0",
-  "description": "",
+  "description": "<h1>MPS Demo - Performance</h1> <ol> <li>/ - Load ads onto a blank page.</li> <li>/timing - Run performance testing using Web Page Test API.</li> </ol>",
   "main": "server.js",
   "dependencies": {
     "body-parser": "^1.10.0",
@@ -10,7 +10,7 @@
     "mongoose": "^3.8.21",
     "handlebars": "^2.0.0",
     "express3-handlebars": "^0.5.2",
-    "fs":"*"
+    "fs": "*"
   },
   "devDependencies": {},
   "scripts": {
