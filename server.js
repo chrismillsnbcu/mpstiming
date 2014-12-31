@@ -54,15 +54,13 @@ app.get('/api/site', function(req, res) {
 
 });
 
-/**** DEMO *****/
-
-
-app.get('/test', function(req, res) {
+/**** DEMO with handlebars functionality *****/
+/*app.get('/test', function(req, res) {
   res.render('test.html', {
     message: 'Homepage!'
   });
-});
-/**** /DEMO *****/
+});*/
+/**** /DEMO with handlebars functionality *****/
 
 /***** Start App *****/
 var server_port = process.env.OPENSHIFT_NODEJS_PORT || 5000;

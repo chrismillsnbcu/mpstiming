@@ -79,9 +79,11 @@ td.alert {
 	position:absolute;
 	top:0;
 	left:0;
+    width:40%;
 }
 #graph-js {
-	left:50%;
+	left:40%;
+    width:60%;
 }
 .borderBtm {
 	border-bottom:1px solid #ccc;
