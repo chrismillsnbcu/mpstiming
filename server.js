@@ -20,40 +20,26 @@ app.use("/css", express.static(__dirname + '/css'));
 app.use("/js", express.static(__dirname + '/js'));
 app.use("/img", express.static(__dirname + '/img'));
 
+var hbs = require('hbs');
+
+app.engine('hbs', hbs.__express);
+app.engine('html', hbs.__express);
+app.set('view engine', 'hbs');
+app.set('views', __dirname + '/views');
+hbs.localsAsTemplateData(app);
+
 /***** Views *****/
 // Homepage.
 app.get('/', function(req, res) {
 
-  var template = fs.readFileSync("views/index.html", "utf8");
-
-  // handlebars data, optional.
-  var source = {
-    message : "Homepage!"
-  };
-
-  var pageBuilder = handlebars.compile(template);
-  var pageText = pageBuilder(source);
-  res.writeHead(200, {"Context-Type": "text/html"});
-  res.write(pageText);
-  res.end();
+  res.render('index.html');
 
 });
 
 // Har page.
 app.get('/timing', function(req, res) {
 
-  var template = fs.readFileSync("views/timing.html", "utf8");
-
-  // handlebars data, optional.
-  var source = {
-    message : "Homepage!"
-  };
-
-  var pageBuilder = handlebars.compile(template);
-  var pageText = pageBuilder(source);
-  res.writeHead(200, {"Context-Type": "text/html"});
-  res.write(pageText);
-  res.end();
+  res.render('timing.html');
 
 });
 
@@ -69,13 +55,7 @@ app.get('/api/site', function(req, res) {
 });
 
 /**** DEMO *****/
-var hbs = require('hbs');
 
-app.engine('hbs', hbs.__express);
-app.engine('html', hbs.__express);
-app.set('view engine', 'hbs');
-app.set('views', __dirname + '/views');
-hbs.localsAsTemplateData(app);
 
 app.get('/test', function(req, res) {
   res.render('test.html', {
