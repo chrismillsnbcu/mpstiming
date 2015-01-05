@@ -47,7 +47,7 @@ app.get('/timing', function(req, res) {
 // Webpagetest API.
 app.get('/api/site', function(req, res) {
 
-  wpt.runTest('http://nbcnews.com', {location: 'ec2-us-west-1'}, function(err, data) {
+  wpt.runTest('http://nbcnews.com', {location: 'LosAngeles'}, function(err, data) {
     res.json({ urls: data });
 
   });
