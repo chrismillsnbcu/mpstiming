@@ -443,7 +443,7 @@ function pageSpeedStatus(_url, _testId) {
         pageSpeedResults(_url);
       } else if(d.statusCode === 100 || d.statusCode === 101) {
         setTimeout(function() {
-          $('#graph p').html('Running site speed test, this may take up to 30 seconds.<br />' + d.statusText);
+          $('#graph p').html('Running site speed test, this may take several minutes.<br />' + d.statusText);
           pageSpeedStatus(_url, _testId)
         }, 1000);
       } else {

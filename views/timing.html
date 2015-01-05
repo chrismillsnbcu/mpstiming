@@ -121,7 +121,7 @@
       url: '/api/site',
       success: function(d) {
         pageSpeedStatus(d.urls.data.jsonUrl, d.urls.data.testId);
-        $('#graph p').html('Running site speed test, this may take up to 30 seconds.');
+        $('#graph p').html('Running site speed test, this may take several minutes.');
       },
       error: function(d) {
         console.log(d);
