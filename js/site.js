@@ -438,7 +438,6 @@ function pageSpeedStatus(_url, _testId) {
     dataType: 'jsonp',
     callback: 'pageTestCallback',
     success: function(d) {
-      console.log('ping status',d, '/ping status');
       if(d.statusCode === 200) {
         $('#graph p').html('Page speed test complete, getting results.');
         pageSpeedResults(_url);
@@ -448,14 +447,11 @@ function pageSpeedStatus(_url, _testId) {
           pageSpeedStatus(_url, _testId)
         }, 1000);
       } else {
-        console.log(d);
-        console.log('Error!');
         $('#graph p').html('An error occurred, please try again later.');
         $('#graph').removeClass('loading');
       }
     },
     error: function(d) {
-      console.log(d, 'Error!');
       $('#graph p').html('A server error occurred, please try again later.');
       $('#graph').removeClass('loading');
     }
@@ -480,12 +476,6 @@ $(document).ready(function() {
     e.preventDefault();
   });
 
-  $('.close').on('click',function() {
-    console.log('close clicked');
-    $(this).parent().remove();
-    $('#mps-test input[type=text]').removeClass('error').val('');
-  });
-
   function displayErr(type, msg) {
     // Remove previous.
     $('.alert').remove();
@@ -494,16 +484,21 @@ $(document).ready(function() {
     switch(type) {
       case 'url':
         error = 'Please enter a valid url.';
-      break;
+        break;
       case 'server':
         error = 'There was a problem with your request, please try again later.';
-      break;
+        break;
       case 'code':
         error = 'There was a problem with your request, please try again later.  Error code: ' + msg;
-      break;
+        break;
+      case 'custom':
+        error = msg;
+        break;
     }
-    $('#mps-test').prepend('<div class="alert alert-box">' + error + '<span class="close">&times;</span></div>');
+    $('#mps-test').prepend('<div class="alert alert-box">' + error + '</div>');
     $('#mps-test input[type=text]').addClass('error');
+    $('#graph').removeClass('loading');
+    $('#graph p').remove();
   }
 
   $('#mps-test').on('submit', function(e) {
@@ -521,7 +516,6 @@ $(document).ready(function() {
 
     if(testUrl.indexOf('http://') === -1) {
       testUrl = 'http://' + testUrl;
-      console.log('http not added, add.');
     }
 
     if(urlRegex.test(testUrl)) {
@@ -533,9 +527,13 @@ $(document).ready(function() {
         url: '/api/site?url=' + testUrl,
         success: function(d) {
           if(d.urls) {
-            $('#mps-test-form').hide();
-            pageSpeedStatus(d.urls.data.jsonUrl, d.urls.data.testId);
-            $('#graph p').html('Running site speed test, this may take several minutes.');
+            if(d.urls.statusCode === 200) {
+              $('#mps-test-form').hide();
+              pageSpeedStatus(d.urls.data.jsonUrl, d.urls.data.testId);
+              $('#graph p').html('Running site speed test, this may take several minutes.');
+            } else {
+              displayErr('custom',d.urls.statusText);
+            }
           } else {
             if(d.errors) {
               displayErr('code',d.errors.code);
