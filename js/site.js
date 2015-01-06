@@ -479,8 +479,80 @@ $(document).ready(function() {
     e.preventDefault();
   });
 
-  // Init.
-  //$('body').append('<script id="siteHar" src="' + mpsDemo.harUrl +'"></script>');
+  $('.close').on('click',function() {
+    console.log('close clicked');
+    $(this).parent().remove();
+    $('#mps-test input[type=text]').removeClass('error').val('');
+  });
+
+  function displayErr(type, msg) {
+    // Remove previous.
+    $('.alert').remove();
+    var error = '';
+    // Append error message.
+    switch(type) {
+      case 'url':
+        error = 'Please enter a valid url.';
+      break;
+      case 'server':
+        error = 'There was a problem with your request, please try again later.';
+      break;
+      case 'code':
+        error = 'There was a problem with your request, please try again later.  Error code: ' + msg;
+      break;
+    }
+    $('#mps-test').prepend('<div class="alert alert-box">' + error + '<span class="close">&times;</span></div>');
+    $('#mps-test input[type=text]').addClass('error');
+  }
+
+  $('#mps-test').on('submit', function(e) {
+
+    var urlRegex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+
+    var testUrl = $('#mps-url').val();
+
+    if(!testUrl || testUrl.length < 3) {
+      displayErr('url');
+      return false;
+    }
+
+    e.preventDefault();
+
+    if(testUrl.indexOf('http://') === -1) {
+      testUrl = 'http://' + testUrl;
+      console.log('http not added, add.');
+    }
+
+    if(urlRegex.test(testUrl)) {
+
+      $('#graph').addClass('loading').append('<p>Requesting site speed test...</p>');
+            
+      $.ajax({
+        type: 'GET',
+        url: '/api/site?url=' + testUrl,
+        success: function(d) {
+          if(d.urls) {
+            $('#mps-test-form').hide();
+            pageSpeedStatus(d.urls.data.jsonUrl, d.urls.data.testId);
+            $('#graph p').html('Running site speed test, this may take several minutes.');
+          } else {
+            if(d.errors) {
+              displayErr('code',d.errors.code);
+            } else {
+              displayErr('server');
+            }
+          }
+        },
+        error: function(d) {
+          displayErr('server');
+        }
+      });
+
+    } else {
+      displayErr('url');
+    }
+
+  });
 });
 /*
 $(document).ready(function() {

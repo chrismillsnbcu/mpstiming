@@ -45,11 +45,10 @@ app.get('/timing', function(req, res) {
 
 /***** APIs *****/
 // Webpagetest API.
-app.get('/api/site', function(req, res) {
+app.get('/api/site/', function(req, res) {
 
-  wpt.runTest('http://nbcnews.com', function(err, data) {
-    res.json({ urls: data });
-
+  wpt.runTest(req.query.url, function(err, data) {
+    res.json({ urls: data, errors: err });
   });
 
 });

@@ -97,3 +97,19 @@ td.alert {
 .button-group p {
 	margin-bottom:0;
 }
+#mps-test {
+    position:relative;
+    z-index:2;
+}
+.alert {
+	position:relative;
+	z-index:2;
+}
+input.error {
+	border:1px solid #ff0000;
+	color:#ff0000;
+	background:#fffcd6;
+}
+span.close {
+	cursor:pointer;
+}
