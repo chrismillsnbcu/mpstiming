@@ -438,6 +438,7 @@ function pageSpeedStatus(_url, _testId) {
     dataType: 'jsonp',
     callback: 'pageTestCallback',
     success: function(d) {
+      console.log('ping status',d, '/ping status');
       if(d.statusCode === 200) {
         $('#graph p').html('Page speed test complete, getting results.');
         pageSpeedResults(_url);
