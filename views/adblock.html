@@ -32,7 +32,6 @@
 <script>
   
   mps._ready(function(){
-    //mps._append(mps._select('body'), '<script id="adblock-test" src="/js/ads.js"><\/script>');
     var _adLoadCallbackExtend = mps._adloadCallback;
     mps._adloadCallback = function() {
       var args = arguments;
@@ -95,35 +94,22 @@
 <script>
   // MPS Adblock detection with external file.
   var mpsAdsEnabled = false;
-  mps._append(mps._select('head'), '<script id="adblock-test" type="text/javascript" src="/js/ads.js"><\/script>');
   mps._adBlock = function() {
-    console.log('mps._adBlock called.');
-    console.log('enabled val: ' + mpsAdsEnabled);
-    //clearTimeout(checkAdBlock);
-    var checkLoad = document.getElementById('adblock-test');
-    console.log('check file load: ' + checkLoad);
-    // Ads.js file not loaded, retry in 500 ms.
-    if(!checkLoad) {
-      var checkAdBlock = setTimeout(mps._adBlock, 500);
+    // Omniture reporting for ad blocking.
+    if(!mpsAdsEnabled) {
+      document.getElementById('ad-blocker').innerHTML = '<div class="alert alert-box">Ad blocker enabled, no ads should appear.</div>';
+      // Omniture ad block var to false.
+      console.log('Omniture report ad blocker is enabled.');
     } else {
-      console.log('enabled val2: ' + mpsAdsEnabled);
-      // Omniture reporting for ad blocking.
-      if(!mpsAdsEnabled) {
-        document.getElementById('ad-blocker').innerHTML = '<div class="alert alert-box">Ad blocker enabled, no ads should appear.</div>';
-        // Omniture ad block var to false.
-      } else {
-        document.getElementById('ad-blocker').innerHTML = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
-        // Omniture ad block var to true.
-      }
-    }
-    count++;
-    if(count > 20) {
-      clearInterval(interval);
+      document.getElementById('ad-blocker').innerHTML = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
+      // Omniture ad block var to true.
+      console.log('Omniture report ad blocker is disabled or n/a.');
     }
   };
-  //var checkAdBlock = setTimeout(mps._adBlock, 0);
-  var count = 0;
-  var interval = setInterval(mps._adBlock, 0);
+  // Ad blockers will block this file.
+  document.write('<scr' + 'ipt id="adblock-test" type="text/javascript" src="/js/ads.js"><\/scr' + 'ipt>');
+  // mps._adBlock() is called from an external file to prevent async issues.
+  document.write('<scr' + 'ipt id="adblock-test" type="text/javascript" src="/js/mps-adblockInit.js"><\/scr' + 'ipt>');
 </script>
 
 </body>
