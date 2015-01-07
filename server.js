@@ -36,10 +36,17 @@ app.get('/', function(req, res) {
 
 });
 
-// Har page.
+// Performance.
 app.get('/timing', function(req, res) {
 
   res.render('timing.html');
+
+});
+
+// Ad Block.
+app.get('/ad-block', function(req, res) {
+
+  res.render('adblock.html');
 
 });
 
