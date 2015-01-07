@@ -25,12 +25,15 @@
       mps.insertAd(mps._select('.right-boxad'),'boxfront1');
 
       // Ad blocker detection.
-      console.log(adsEnabled);
+      console.log('ads enabled ads.js file: ' + adsEnabled);
+      console.log('ads.js file exist?: ' + document.getElementById('adblock-test'));
       if(adsEnabled === true) {
         document.getElementById('ad-blocker').innerHTML = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
       } else {
         document.getElementById('ad-blocker').innerHTML = '<div class="alert alert-box">Ad blocker enabled, no ads should appear.</div>';
       }
+
+      
 
     }
   </script>
@@ -40,7 +43,8 @@
 <script>
   var adsEnabled = false;
   mps._ready(function(){
-    mps._append(mps._select('body'), '<script src="/js/ads.js"><\/script>');
+    console.log('append ads.js file');
+    mps._append(mps._select('body'), '<script id="adblock-test" src="/js/ads.js"><\/script>');
     var _adLoadCallbackExtend = mps._adloadCallback;
     mps._adloadCallback = function() {
       var args = arguments;
