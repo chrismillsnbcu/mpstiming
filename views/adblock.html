@@ -95,7 +95,7 @@
 <script>
   // MPS Adblock detection with external file.
   var mpsAdsEnabled = false;
-  mps._append(mps._select('head'), '<script id="adblock-test" type="text/javascript" src="http://localhost:5000/js/ads.js"><\/script>');
+  mps._append(mps._select('head'), '<script id="adblock-test" type="text/javascript" src="/js/ads.js"><\/script>');
   mps._adBlock = function() {
     console.log('mps._adBlock called.');
     console.log('enabled val: ' + mpsAdsEnabled);
