@@ -45,34 +45,6 @@
     };
 
   });
-
-  // MPS Adblock detection with external file.
-  mps._adsEnabled = {
-    'enabled': false
-  };
-  mps._append(mps._select('body'), '<script id="adblock-test" src="/js/ads.js"><\/script>');
-  mps._adBlock = function() {
-    console.log('mps._adBlock called.');
-    console.log('enabled val: ' + mps._adsEnabled['enabled']);
-    clearTimeout(checkAdBlock);
-    var checkLoad = document.getElementById('adblock-test');
-    console.log('check file load: ' + checkLoad);
-    // Ads.js file not loaded, retry in 500 ms.
-    if(!checkLoad) {
-      var checkAdBlock = setTimeout(mps._adBlock, 3);
-    } else {
-      // Omniture reporting for ad blocking.
-      if(!mps._adsEnabled['enabled']) {
-        document.getElementById('ad-blocker').innerHTML = '<div class="alert alert-box">Ad blocker enabled, no ads should appear.</div>';
-        // Omniture ad block var to false.
-      } else {
-        document.getElementById('ad-blocker').innerHTML = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
-        // Omniture ad block var to true.
-      }
-    }
-  };
-  var checkAdBlock = setTimeout(mps._adBlock, 3);
-
 </script>
 
 <nav class="top-bar" data-topbar role="navigation">
@@ -119,6 +91,40 @@
   </div>
   <script>typeof(mps.writeFooter)=='function' && mps.writeFooter();</script>
 </footer>
+
+<script>
+  // MPS Adblock detection with external file.
+  var mpsAdsEnabled = false;
+  mps._append(mps._select('head'), '<script id="adblock-test" type="text/javascript" src="http://localhost:5000/js/ads.js"><\/script>');
+  mps._adBlock = function() {
+    console.log('mps._adBlock called.');
+    console.log('enabled val: ' + mpsAdsEnabled);
+    //clearTimeout(checkAdBlock);
+    var checkLoad = document.getElementById('adblock-test');
+    console.log('check file load: ' + checkLoad);
+    // Ads.js file not loaded, retry in 500 ms.
+    if(!checkLoad) {
+      var checkAdBlock = setTimeout(mps._adBlock, 500);
+    } else {
+      console.log('enabled val2: ' + mpsAdsEnabled);
+      // Omniture reporting for ad blocking.
+      if(!mpsAdsEnabled) {
+        document.getElementById('ad-blocker').innerHTML = '<div class="alert alert-box">Ad blocker enabled, no ads should appear.</div>';
+        // Omniture ad block var to false.
+      } else {
+        document.getElementById('ad-blocker').innerHTML = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
+        // Omniture ad block var to true.
+      }
+    }
+    count++;
+    if(count > 20) {
+      clearInterval(interval);
+    }
+  };
+  //var checkAdBlock = setTimeout(mps._adBlock, 0);
+  var count = 0;
+  var interval = setInterval(mps._adBlock, 0);
+</script>
 
 </body>
 </html>

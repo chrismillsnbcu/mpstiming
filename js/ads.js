@@ -1,1 +1,3 @@
-mps._adsEnabled['enabled'] = true;
+mpsAdsEnabled = true;
+console.log('loaded');
+console.log(mpsAdsEnabled);
