@@ -24,27 +24,15 @@
       mps.insertAd(mps._select('.top-banner'),'topbanner');
       mps.insertAd(mps._select('.right-boxad'),'boxfront1');
 
-      // Ad blocker detection.
-      console.log('ads enabled ads.js file: ' + adsEnabled);
-      console.log('ads.js file exist?: ' + document.getElementById('adblock-test'));
-      if(adsEnabled === true) {
-        document.getElementById('ad-blocker').innerHTML = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
-      } else {
-        document.getElementById('ad-blocker').innerHTML = '<div class="alert alert-box">Ad blocker enabled, no ads should appear.</div>';
-      }
-
-      
-
     }
   </script>
 
 </head>
 <body>
 <script>
-  var adsEnabled = false;
+  
   mps._ready(function(){
-    console.log('append ads.js file');
-    mps._append(mps._select('body'), '<script id="adblock-test" src="/js/ads.js"><\/script>');
+    //mps._append(mps._select('body'), '<script id="adblock-test" src="/js/ads.js"><\/script>');
     var _adLoadCallbackExtend = mps._adloadCallback;
     mps._adloadCallback = function() {
       var args = arguments;
@@ -57,6 +45,34 @@
     };
 
   });
+
+  // MPS Adblock detection with external file.
+  mps._adsEnabled = {
+    'enabled': false
+  };
+  mps._append(mps._select('body'), '<script id="adblock-test" src="/js/ads.js"><\/script>');
+  mps._adBlock = function() {
+    console.log('mps._adBlock called.');
+    console.log('enabled val: ' + mps._adsEnabled['enabled']);
+    clearTimeout(checkAdBlock);
+    var checkLoad = document.getElementById('adblock-test');
+    console.log('check file load: ' + checkLoad);
+    // Ads.js file not loaded, retry in 500 ms.
+    if(!checkLoad) {
+      var checkAdBlock = setTimeout(mps._adBlock, 3);
+    } else {
+      // Omniture reporting for ad blocking.
+      if(!mps._adsEnabled['enabled']) {
+        document.getElementById('ad-blocker').innerHTML = '<div class="alert alert-box">Ad blocker enabled, no ads should appear.</div>';
+        // Omniture ad block var to false.
+      } else {
+        document.getElementById('ad-blocker').innerHTML = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
+        // Omniture ad block var to true.
+      }
+    }
+  };
+  var checkAdBlock = setTimeout(mps._adBlock, 3);
+
 </script>
 
 <nav class="top-bar" data-topbar role="navigation">

@@ -1,1 +1,1 @@
-adsEnabled = true;
+mps._adsEnabled['enabled'] = true;
