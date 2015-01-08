@@ -520,6 +520,8 @@ $(document).ready(function() {
 
     if(urlRegex.test(testUrl)) {
 
+      mpsDemo.site = testUrl;
+
       $('#graph').addClass('loading').append('<p>Requesting site speed test...</p>');
             
       $.ajax({
