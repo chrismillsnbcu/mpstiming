@@ -50,6 +50,13 @@ app.get('/ad-block', function(req, res) {
 
 });
 
+// Ad Block in MPS.
+app.get('/ad-loaded', function(req, res) {
+
+  res.render('ad-loaded.html');
+
+});
+
 /***** APIs *****/
 // Webpagetest API.
 app.get('/api/site/', function(req, res) {
