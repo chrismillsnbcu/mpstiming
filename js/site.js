@@ -505,7 +505,7 @@ $(document).ready(function() {
 
     var urlRegex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
-    var testUrlVal = $('#mps-url').val();
+    var testUrl = $('#mps-url').val();
 
     if(!testUrl || testUrl.length < 3) {
       displayErr('url');
@@ -515,12 +515,15 @@ $(document).ready(function() {
     e.preventDefault();
 
     if(testUrl.indexOf('http://') === -1) {
-      var testUrl = 'http://' + testUrlVal;
+      testUrl = 'http://' + testUrl;
     }
 
     if(urlRegex.test(testUrl)) {
 
-      mpsDemo.site = testUrlVal.charAt(0).toUpperCase() + testUrlVal.slice(1);
+      var formatUrl = testUrl.replace('http://', '');
+      formatUrl = formatUrl.charAt(0).toUpperCase() + formatUrl.slice(1);
+
+      mpsDemo.site = formatUrl;
 
       $('#graph').addClass('loading').append('<p>Requesting site speed test...</p>');
             
