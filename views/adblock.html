@@ -95,6 +95,7 @@
 <script>
   // Adblock detection with external file.
   var adBlockEnabled = true;
+  var adBlockTimer = 0;
 
   mps.demoDisplay = function(type) {
     var msg = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
@@ -120,6 +121,8 @@
 
     console.log('gpt loaded: ' + mps._gptloaded);
 
+    adBlockTimer = adBlockTimer + 1000;
+
     if(adBlockEnabled === true || mps._gptError === true) {
       // Omniture ad blocking variables.
       //_satellite.setVar('ad blocker enabled', 'ads blocked');
@@ -128,8 +131,8 @@
 
     console.log('gpt error: ' + mps._gptError);
     // GPT not loaded async, recheck in 1s.
-    if(mps._gptError === undefined) {
-      console.log('mps._gptError is undefined, check again.');
+    if(mps._gptError === undefined && adBlockTimer < 11000) {
+      console.log('mps._gptError is undefined, check again.  Try ' + adBlockTimer / 1000 + ' of 10.');
       mps.demoDisplay('notloaded');
       setTimeout(mps._adBlock, 1000);
       return false;
@@ -153,7 +156,7 @@
 
   // Ad blockers will block this file.
   var ads = document.createElement('script');
-  ads.src = 'http://local.devmps.com/js/advertising/ads.js';
+  ads.src = '//'+mpsopts.host+'/js/advertising/ads.js';
   ads.type = 'text/javascript';
   ads.async = false;
   ads.onload = function() { setTimeout(mps._adBlock, 500);},
