@@ -96,8 +96,6 @@
   <script>typeof(mps.writeFooter)=='function' && mps.writeFooter();</script>
 </footer>
 
-<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
-
 <script>
   // Adblock detection with external file.
   var adBlockEnabled = true;
@@ -159,18 +157,19 @@
 
   // Ad blockers will block this file.
   var ads = document.createElement('script');
-  ads.src = '/js/ads.js';
+  ads.src = 'http://local.devmps.com/js/advertising/ads.js';
   ads.type = 'text/javascript';
-  ads.onload = 'test()',
   ads.async = false;
+  ads.onload = function() { setTimeout(mps._adBlock, 500);},
+  ads.onerror = function() { setTimeout(mps._adBlock, 500);},
   document.getElementsByTagName('head')[0].appendChild(ads);
   
   // mps._adBlock() is called from an external file to prevent async issues.
-  var adBlockInit = document.createElement('script');
-  adBlockInit.src = '/js/mps-adblockInit.js';
+  /*var adBlockInit = document.createElement('script');
+  adBlockInit.src = 'http://local.devmps.com/js/advertising/mps-abInit.js';
   adBlockInit.type = 'text/javascript';
   adBlockInit.async = false;
-  document.getElementsByTagName('head')[0].appendChild(adBlockInit);
+  document.getElementsByTagName('head')[0].appendChild(adBlockInit);*/
 
 </script>
 

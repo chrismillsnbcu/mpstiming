@@ -95,7 +95,6 @@
 <script>
   // Adblock detection with external file.
   var adBlockEnabled = true;
-  var adBlockTimer = 0;
 
   mps.demoDisplay = function(type) {
     var msg = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
@@ -119,18 +118,17 @@
   // MPS Adblock.
   mps._adBlock = function() {
 
+    console.log('gpt loaded: ' + mps._gptloaded);
+
     if(adBlockEnabled === true || mps._gptError === true) {
       // Omniture ad blocking variables.
       //_satellite.setVar('ad blocker enabled', 'ads blocked');
       //_satellite.track('ad blocker enabled');
     }
 
-    adBlockTimer++;
-
-    console.log('gpt loaded: ' + mps._gptloaded);
     console.log('gpt error: ' + mps._gptError);
     // GPT not loaded async, recheck in 1s.
-    if(mps._gptError === undefined && adBlockTimer < 10) {
+    if(mps._gptError === undefined) {
       console.log('mps._gptError is undefined, check again.');
       mps.demoDisplay('notloaded');
       setTimeout(mps._adBlock, 1000);
@@ -155,18 +153,19 @@
 
   // Ad blockers will block this file.
   var ads = document.createElement('script');
-  ads.src = '/js/ads.js';
+  ads.src = 'http://local.devmps.com/js/advertising/ads.js';
   ads.type = 'text/javascript';
-  ads.onload = 'test()',
   ads.async = false;
+  ads.onload = function() { setTimeout(mps._adBlock, 500);},
+  ads.onerror = function() { setTimeout(mps._adBlock, 500);},
   document.getElementsByTagName('head')[0].appendChild(ads);
   
   // mps._adBlock() is called from an external file to prevent async issues.
-  var adBlockInit = document.createElement('script');
-  adBlockInit.src = '/js/mps-adblockInit.js';
+  /*var adBlockInit = document.createElement('script');
+  adBlockInit.src = 'http://local.devmps.com/js/advertising/mps-abInit.js';
   adBlockInit.type = 'text/javascript';
   adBlockInit.async = false;
-  document.getElementsByTagName('head')[0].appendChild(adBlockInit);
+  document.getElementsByTagName('head')[0].appendChild(adBlockInit);*/
 
 </script>
 
