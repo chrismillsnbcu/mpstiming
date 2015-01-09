@@ -109,7 +109,7 @@
         break;
       case 'blocked':
         msg = '<div class="alert alert-box">Ghostery or script blocking is enabled, no ads should appear.</div>';
-        debugmode.log && console.log('[mps._adBlock: Ghostery or script blocking ad blocker is enabled.');
+        debugmode.log && console.log('[mps._adBlock: Ghostery, Disconnect, or script blocking ad blocker is enabled.');
         break;
     }
     document.getElementById('ad-blocker').innerHTML = msg;
@@ -142,7 +142,7 @@
     }
     if(mps._gptError === true) {
       mps.demoDisplay('blocked');
-      debugmode.log && console.log('[mps._adBlock: Ghostery or script blocking ad blocker is enabled.');
+      debugmode.log && console.log('[mps._adBlock: Ghostery, Disconnect, or script blocking ad blocker is enabled.');
       return false;
     }
 

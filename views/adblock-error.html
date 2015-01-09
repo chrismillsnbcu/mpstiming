@@ -21,9 +21,7 @@
     var mps=mps||{}; document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
     
     mps.gptloadCallback = function() {
-      console.log('gpt callback');
       mps.insertAd(mps._select('.right-boxad'),'boxad');
-
     }
   </script>
 
@@ -113,7 +111,7 @@
         break;
       case 'blocked':
         msg = '<div class="alert alert-box">Ghostery or script blocking is enabled, no ads should appear.</div>';
-        debugmode.log && console.log('[mps._adBlock: Ghostery or script blocking ad blocker is enabled.');
+        debugmode.log && console.log('[mps._adBlock: Ghostery, Disconnect, or script blocking ad blocker is enabled.');
         break;
     }
     document.getElementById('ad-blocker').innerHTML = msg;
@@ -146,7 +144,7 @@
     }
     if(mps._gptError === true) {
       mps.demoDisplay('blocked');
-      debugmode.log && console.log('[mps._adBlock: Ghostery or script blocking ad blocker is enabled.');
+      debugmode.log && console.log('[mps._adBlock: Ghostery, Disconnect, or script blocking ad blocker is enabled.');
       return false;
     }
 
