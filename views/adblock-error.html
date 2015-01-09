@@ -9,21 +9,20 @@
   <link rel="stylesheet" href="/css/styles.css"/>
 
   <script type="text/javascript">
-    var time = new Date();
-
-    var mpsopts = {'host':'local.devmps.com'};
-    var mpscall = {'site':'fandango-web'};
-    mpscall.path = 'TEST';
-    mpscall.cat = 'TEST';
-    mpscall.type = 'TEST';
-    var mps = mps || {};
-    //document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
-    document.write('<scr'+'ipt id="mps-ext-load" src="http://local.devmps.com/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+    var mpscall = {
+      "content_id": "test-refresh",
+      "path": "TEST/refresh",
+      "site": "sandbox"
+    }
+    var mpsopts={
+      'updatecorrelator':true,
+      "host":"local.devmps.com"
+    };
+    var mps=mps||{}; document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
     
     mps.gptloadCallback = function() {
       console.log('gpt callback');
-      mps.insertAd(mps._select('.top-banner'),'topbanner');
-      mps.insertAd(mps._select('.right-boxad'),'boxfront1');
+      mps.insertAd(mps._select('.right-boxad'),'boxad');
 
     }
   </script>
