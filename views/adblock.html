@@ -103,43 +103,47 @@
   // Adblock detection with external file.
   var adBlockEnabled = true;
   // MPS Adblock.
-  mps._adBlock = function() {
+  mps._ready(function() {
 
-    var msg = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
+    mps._adBlock = function() {
 
-    console.log(adBlockEnabled);
-    console.log(googletag.cmd.push.length);
+      var msg = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
 
-    if(adBlockEnabled || googletag.cmd.push.length === 0) {
-      // Omniture ad blocking variables.
-      //_satellite.setVar('ad blocker enabled', 'ads blocked');
-      //_satellite.track('ad blocker enabled');
-    }
+      if(adBlockEnabled || googletag.cmd.push.length === 0) {
+        // Omniture ad blocking variables.
+        if(adBlockEnabled) {
+          //_satellite.setVar('ad blocker enabled', 'ads blocked');
+          //_satellite.track('ad blocker enabled');
+        } else {
+        }
+      }
 
-    // Demo only.
-    if(adBlockEnabled) {
-      msg = '<div class="alert alert-box">Ad Block or file name ad blocker enabled, no ads should appear.</div>';
-    } else if(googletag.cmd.push.length === 0) {
-      msg = '<div class="alert alert-box">Ghostery or script blocking is enabled, no ads should appear.</div>';
-    }
+      // Demo only.
+      if(adBlockEnabled) {
+        msg = '<div class="alert alert-box">Ad Block or file name ad blocker enabled, no ads should appear.</div>';
+      } else if(googletag.cmd.push.length === 0) {
+        msg = '<div class="alert alert-box">Ghostery or script blocking is enabled, no ads should appear.</div>';
+      }
 
-    document.getElementById('ad-blocker').innerHTML = msg;
+      document.getElementById('ad-blocker').innerHTML = msg;
 
-  };
+    };
 
-  console.log('append ad block called');
-  // Ad blockers will block this file.
-  var ads = document.createElement('script');
-  ads.src = '/js/ads.js';
-  ads.type = 'text/javascript';
-  document.getElementsByTagName('head')[0].appendChild(ads);
+    // Ad blockers will block this file.
+    var ads = document.createElement('script');
+    ads.src = '/js/ads.js';
+    ads.type = 'text/javascript';
+    ads.onload = 'test()',
+    document.getElementsByTagName('head')[0].appendChild(ads);
+    
+    // mps._adBlock() is called from an external file to prevent async issues.
+    var adBlockInit = document.createElement('script');
+    adBlockInit.src = '/js/mps-adblockInit.js';
+    adBlockInit.type = 'text/javascript';
+    document.getElementsByTagName('head')[0].appendChild(adBlockInit);
+
+  });
   
-  // mps._adBlock() is called from an external file to prevent async issues.
-  var adBlockInit = document.createElement('script');
-  adBlockInit.src = '/js/mps-adblockInit.js';
-  adBlockInit.type = 'text/javascript';
-  document.getElementsByTagName('head')[0].appendChild(adBlockInit);
-
   // Other ideas - AJAX loading detection method.
   /*$.ajax({
     url: 'http://www.googletagservices.com/tag/js/gpt.js',
@@ -156,6 +160,13 @@
       }
     }
   });*/
+
+  /*$.get('http://www.googletagservices.com/tag/js/gpt.js')
+    .done(function(d) {
+      alert('done!');
+    }).error(function(d) {
+      alert('error!');
+    });*/
 
 </script>
 

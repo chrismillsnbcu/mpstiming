@@ -1,1 +1,1 @@
-mpsAdsEnabled = true;
+adBlockEnabled = false;
