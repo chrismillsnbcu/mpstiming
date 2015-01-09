@@ -18,20 +18,14 @@
     mpscall.type = 'TEST';
     var mps = mps || {};
     //document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
-document.write('<scr'+'ipt id="mps-ext-load" src="http://local.devmps.com/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+    document.write('<scr'+'ipt id="mps-ext-load" src="http://local.devmps.com/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+    
     mps.gptloadCallback = function() {
       console.log('gpt callback');
       mps.insertAd(mps._select('.top-banner'),'topbanner');
       mps.insertAd(mps._select('.right-boxad'),'boxfront1');
 
     }
-
-
-
-
-
-
-
   </script>
 
   <!-- Demo only. -->
@@ -116,6 +110,10 @@ document.write('<scr'+'ipt id="mps-ext-load" src="http://local.devmps.com/fetch/
         msg = '<div class="alert alert-box">Ad Block or file name ad blocker enabled, no ads should appear.</div>';
         debugmode.log && console.log('[mps._adBlock: Ad Block or file name ad blocker is enabled.');
         break;
+      case 'notloaded':
+        msg = '<div class="alert alert-box">GPT is not loaded yet, rechecking in 1s.</div>';
+        debugmode.log && console.log('[mps._adBlock: GPT is not loaded yet, rechecking in 1s.');
+        break;
       case 'blocked':
         msg = '<div class="alert alert-box">Ghostery or script blocking is enabled, no ads should appear.</div>';
         debugmode.log && console.log('[mps._adBlock: Ghostery or script blocking ad blocker is enabled.');
@@ -124,38 +122,32 @@ document.write('<scr'+'ipt id="mps-ext-load" src="http://local.devmps.com/fetch/
     document.getElementById('ad-blocker').innerHTML = msg;
   };
 
-  // Extend gptError function if script has not loaded yet.
-  var _gptloadErrorExtend = mps._gptloadError;
-  mps._gptloadError = function() {
-    var args = arguments;
-    var result = _gptloadErrorExtend.apply(this, arguments);
-    // Omniture ad blocking variables.
-    //_satellite.setVar('ad blocker enabled', 'ads blocked');
-    //_satellite.track('ad blocker enabled');
-    debugmode.log && console.log('[mps._adBlock: Ghostery or script blocking ad blocker is enabled, reported from extended mps._gptloadError function.');
-
-    // DEMO ONLY.
-    mps.demoDisplay('blocked');
-    //
-
-    return result;
-  };
-
   // MPS Adblock.
   mps._adBlock = function() {
 
-    if(adBlockEnabled || mps._gptError) {
+    console.log('gpt loaded: ' + mps._gptloaded);
+
+    if(adBlockEnabled === true || mps._gptError === true) {
       // Omniture ad blocking variables.
       //_satellite.setVar('ad blocker enabled', 'ads blocked');
       //_satellite.track('ad blocker enabled');
     }
 
-    if(adBlockEnabled) {
+    console.log('gpt error: ' + mps._gptError);
+    // GPT not loaded async, recheck in 1s.
+    if(mps._gptError === undefined) {
+      console.log('mps._gptError is undefined, check again.');
+      mps.demoDisplay('notloaded');
+      setTimeout(mps._adBlock, 1000);
+      return false;
+    }
+
+    if(adBlockEnabled === true) {
       mps.demoDisplay('filename');
       debugmode.log && console.log('[mps._adBlock: Ad Block or file name ad blocker enabled.');
       return false;
     }
-    if(mps._gptError) {
+    if(mps._gptError === true) {
       mps.demoDisplay('blocked');
       debugmode.log && console.log('[mps._adBlock: Ghostery or script blocking ad blocker is enabled.');
       return false;
