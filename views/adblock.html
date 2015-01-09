@@ -20,12 +20,18 @@
     document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
 
     mps.gptloadCallback = function() {
-
+      console.log('gpt callback');
       mps.insertAd(mps._select('.top-banner'),'topbanner');
       mps.insertAd(mps._select('.right-boxad'),'boxfront1');
 
     }
   </script>
+
+  <!-- Demo only. -->
+  <script>
+    var _satellite = [];
+  </script>
+  <!-- /Demo only. -->
 
 </head>
 <body>
@@ -91,25 +97,66 @@
   <script>typeof(mps.writeFooter)=='function' && mps.writeFooter();</script>
 </footer>
 
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+
 <script>
-  // MPS Adblock detection with external file.
-  var mpsAdsEnabled = false;
+  // Adblock detection with external file.
+  var adBlockEnabled = true;
+  // MPS Adblock.
   mps._adBlock = function() {
-    // Omniture reporting for ad blocking.
-    if(!mpsAdsEnabled) {
-      document.getElementById('ad-blocker').innerHTML = '<div class="alert alert-box">Ad blocker enabled, no ads should appear.</div>';
-      // Omniture ad block var to false.
-      console.log('Omniture report ad blocker is enabled.');
-    } else {
-      document.getElementById('ad-blocker').innerHTML = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
-      // Omniture ad block var to true.
-      console.log('Omniture report ad blocker is disabled or n/a.');
+
+    var msg = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
+
+    console.log(adBlockEnabled);
+    console.log(googletag.cmd.push.length);
+
+    if(adBlockEnabled || googletag.cmd.push.length === 0) {
+      // Omniture ad blocking variables.
+      //_satellite.setVar('ad blocker enabled', 'ads blocked');
+      //_satellite.track('ad blocker enabled');
     }
+
+    // Demo only.
+    if(adBlockEnabled) {
+      msg = '<div class="alert alert-box">Ad Block or file name ad blocker enabled, no ads should appear.</div>';
+    } else if(googletag.cmd.push.length === 0) {
+      msg = '<div class="alert alert-box">Ghostery or script blocking is enabled, no ads should appear.</div>';
+    }
+
+    document.getElementById('ad-blocker').innerHTML = msg;
+
   };
+
+  console.log('append ad block called');
   // Ad blockers will block this file.
-  document.write('<scr' + 'ipt id="adblock-test" type="text/javascript" src="/js/ads_gpt_google.js"><\/scr' + 'ipt>');
+  var ads = document.createElement('script');
+  ads.src = '/js/ads.js';
+  ads.type = 'text/javascript';
+  document.getElementsByTagName('head')[0].appendChild(ads);
+  
   // mps._adBlock() is called from an external file to prevent async issues.
-  document.write('<scr' + 'ipt id="adblock-test" type="text/javascript" src="/js/mps-adblockInit.js"><\/scr' + 'ipt>');
+  var adBlockInit = document.createElement('script');
+  adBlockInit.src = '/js/mps-adblockInit.js';
+  adBlockInit.type = 'text/javascript';
+  document.getElementsByTagName('head')[0].appendChild(adBlockInit);
+
+  // Other ideas - AJAX loading detection method.
+  /*$.ajax({
+    url: 'http://www.googletagservices.com/tag/js/gpt.js',
+    type: 'GET',
+    dataType: 'javascript',
+    success: function(d) {
+      console.log('success');
+
+    },
+    error: function(d) {
+      console.log('error', d, '/error');
+      if(d.statusText != 'error') {
+        alert('ghostery enabled');
+      }
+    }
+  });*/
+
 </script>
 
 </body>
