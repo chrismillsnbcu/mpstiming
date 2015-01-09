@@ -111,18 +111,15 @@
 
       if(adBlockEnabled || googletag.cmd.push.length === 0) {
         // Omniture ad blocking variables.
+        //_satellite.setVar('ad blocker enabled', 'ads blocked');
+        //_satellite.track('ad blocker enabled');
         if(adBlockEnabled) {
-          //_satellite.setVar('ad blocker enabled', 'ads blocked');
-          //_satellite.track('ad blocker enabled');
+          msg = '<div class="alert alert-box">Ad Block or file name ad blocker enabled, no ads should appear.</div>';
+          debugmode.log && console.log('[mps._adBlock: Ad Block or file name ad blocker is enabled.');
         } else {
+          msg = '<div class="alert alert-box">Ghostery or script blocking is enabled, no ads should appear.</div>';
+          debugmode.log && console.log('[mps._adBlock: Ghostery or script blocking ad blocker is enabled.');
         }
-      }
-
-      // Demo only.
-      if(adBlockEnabled) {
-        msg = '<div class="alert alert-box">Ad Block or file name ad blocker enabled, no ads should appear.</div>';
-      } else if(googletag.cmd.push.length === 0) {
-        msg = '<div class="alert alert-box">Ghostery or script blocking is enabled, no ads should appear.</div>';
       }
 
       document.getElementById('ad-blocker').innerHTML = msg;
