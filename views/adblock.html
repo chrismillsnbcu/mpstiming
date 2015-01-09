@@ -131,12 +131,14 @@
     ads.src = '/js/ads.js';
     ads.type = 'text/javascript';
     ads.onload = 'test()',
+    ads.async = false;
     document.getElementsByTagName('head')[0].appendChild(ads);
     
     // mps._adBlock() is called from an external file to prevent async issues.
     var adBlockInit = document.createElement('script');
     adBlockInit.src = '/js/mps-adblockInit.js';
     adBlockInit.type = 'text/javascript';
+    adBlockInit.async = false;
     document.getElementsByTagName('head')[0].appendChild(adBlockInit);
 
   });
