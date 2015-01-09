@@ -47,7 +47,6 @@ document.write('<scr'+'ipt id="mps-ext-load" src="http://local.devmps.com/fetch/
   mps._ready(function(){
     var _adLoadCallbackExtend = mps._adloadCallback;
     mps._adloadCallback = function() {
-      alert('adload callback')
       var args = arguments;
       var result = _adLoadCallbackExtend.apply(this, arguments);
       var _this = args[0];
