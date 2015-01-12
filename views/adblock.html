@@ -22,29 +22,8 @@
     }
   </script>
 
-  <!-- Demo only. -->
-  <script>
-    var _satellite = [];
-  </script>
-  <!-- /Demo only. -->
-
 </head>
 <body>
-<script>
-  
-  mps._ready(function(){
-    var _adLoadCallbackExtend = mps._adloadCallback;
-    mps._adloadCallback = function() {
-      var args = arguments;
-      var result = _adLoadCallbackExtend.apply(this, arguments);
-      var _this = args[0];
-      if(_this._mps._slot != '_oop') {
-        document.getElementById('results').innerHTML += '<li>MPS <strong>' + _this._mps._slot + '</strong> ad code was loaded in <strong>' + _this._mps._elapsed + ' milliseconds</strong>.</li>';
-      }
-      return result;
-    };
-  });
-</script>
 
 <nav class="top-bar" data-topbar role="navigation">
   <ul class="title-area">
@@ -69,8 +48,6 @@
   </div>
 
   <div class="large-8">
-
-    <div class="panel mt20"><ul id="results"></ul></div>
 
     <h1 class="mt20">MPS Demo</h1>
 
