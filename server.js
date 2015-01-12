@@ -57,6 +57,13 @@ app.get('/ad-block-error', function(req, res) {
 
 });
 
+// Ad Block Error.
+app.get('/ad-block-ajax', function(req, res) {
+
+  res.render('adblock-ajax-detect.html');
+
+});
+
 // Ad Block in MPS.
 app.get('/ad-loaded', function(req, res) {
 
