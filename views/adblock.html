@@ -9,17 +9,16 @@
   <link rel="stylesheet" href="/css/styles.css"/>
 
   <script type="text/javascript">
-    var mpsopts = {'host':'stage.mps.nbcnews.com'};
-    var mpscall = {'site':'nbcnews-web'};
-    mpscall.path = '/cover';
-    mpscall.cat = 'cover';
-    mpscall.type = 'cover';
+    var mpsopts = {'host':'dev-mps.nbcuni.com'};
+    var mpscall = {'site':'fandango-web'};
+    //mpscall.path = '/cover';
+    mpscall.cat = 'TEST';
+    mpscall.type = 'TEST';
     var mps = mps || {};
     document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
 
     mps.gptloadCallback = function() {
-      mps.insertAd(mps._select('.top-banner'),'topbanner');
-      mps.insertAd(mps._select('.right-boxad'),'boxfront1');
+      mps.insertAd(mps._select('.right-boxad'),'boxad');
     }
   </script>
 
@@ -62,10 +61,6 @@
     </ul>
   </section>
 </nav>
-
-<div class="large-12 content m0auto center">
-  <div class="top-banner mt20 top-ad"></div>
-</div>
 
 <div class="large-12 content m0auto">
 

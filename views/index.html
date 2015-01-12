@@ -23,6 +23,22 @@
       mps.insertAd(mps._select('.top-banner'),'topbanner');
       mps.insertAd(mps._select('.right-boxad'),'boxfront1');
     }
+
+    mps.adloadCallback = function(eo) {
+      alert('test');
+      console.log(eo);
+      //debugmode.log && console.log('[mps:Detect] AD LOAD CALLBACK: '+eo._mps._slot)
+      if(!eo || !eo._mps || !eo._mps._elapsed || !eo._mps._slot) {
+        debugmode.log && console.log('[mps:Detect] FAILED: adloadCallback '+(eo._mps._elapsed))
+        return false;
+      }
+      if(eo._mps._slot == 'boxad') {
+        mps._ck.w('mps_detect_hp_load','$$$');
+        _satellite.setVar('ad load time', eo._mps._elapsed);
+        _satellite.track('home page ad loaded');
+        debugmode.log && console.log('[mps:Detect] track load at '+(eo._mps._elapsed))
+      }
+    }
   </script>
 
 </head>
