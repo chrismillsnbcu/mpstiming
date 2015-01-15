@@ -13,11 +13,9 @@
     var loc = window.location.hostname;
     switch(loc) {
       case 'localhost':
-        console.log('localhost');
         var env = 'local.devmps.com';
         break;
       default:
-        console.log('stage');
         var env = 'stage-mps.nbcuni.com';
         break;
     }
