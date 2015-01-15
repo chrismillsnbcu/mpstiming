@@ -64,6 +64,13 @@ app.get('/ad-block-ajax', function(req, res) {
 
 });
 
+// Ad Scaling.
+app.get('/ad-scaling', function(req, res) {
+
+  res.render('ad-scaling.html');
+
+});
+
 // Ad Block in MPS.
 app.get('/ad-loaded', function(req, res) {
 

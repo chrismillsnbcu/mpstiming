@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>MPS Ad Scaling Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/css/foundation.min.css"/>
+  <link rel="stylesheet" href="/css/styles.css"/>
+
+  <script type="text/javascript">
+
+    /*var mpsopts = {'host':'stage.mps.nbcnews.com'};
+    var mpscall = {'site':'nbcnews-web'};
+    mpscall.path = '/cover';
+    mpscall.cat = 'cover';
+    mpscall.type = 'cover';*/
+
+    var env = localStorage.getItem('adscale-env');
+
+    if(!env) {
+      env = 'stage.mps.com';
+      localStorage.setItem('adscale-env','stage.mps.com');
+    }
+
+    var mpscall = {
+      "content_id": "test-refresh",
+      "path": "TEST/refresh",
+      "site": "sandbox"
+    }
+    var mpsopts={
+      'updatecorrelator':true,
+      "host":env
+    };
+    var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+
+    mps.gptloadCallback = function() {
+      mps.insertAd(mps._select('.top-banner'),'topbanner');
+      mps.insertAd(mps._select('.right-boxad'),'boxad');
+    }
+
+    mps.adloadCallback = function(eo) {
+      //debugmode.log && console.log('[mps:Detect] AD LOAD CALLBACK: '+eo._mps._slot)
+      if(!eo || !eo._mps || !eo._mps._elapsed || !eo._mps._slot) {
+        debugmode.log && console.log('[mps:Detect] FAILED: adloadCallback '+(eo._mps._elapsed))
+        return false;
+      }
+      if(eo._mps._slot == 'boxad') {
+        mps._ck.w('mps_detect_hp_load','$$$');
+        _satellite.setVar('ad load time', eo._mps._elapsed);
+        _satellite.track('home page ad loaded');
+        debugmode.log && console.log('[mps:Detect] track load at '+(eo._mps._elapsed))
+      }
+    }
+  </script>
+
+</head>
+<body>
+
+<nav class="top-bar" data-topbar role="navigation">
+  <ul class="title-area">
+    <li class="name">
+      <h1><a href="#">NBC News Site Waterfall</a></h1>
+    </li>
+  </ul>
+  <section class="top-bar-section">
+    <ul class="right">
+      <li><a href="/">Demo</a></li>
+      <li><a href="/timing">Timing</a></li>
+      <li><a href="/ad-block">Ad Block</a></li>
+      <li><a href="/ad-block-ajax">Ad Block AJAX</a></li>
+      <li class="active"><a href="/ad-scaling">Ad Scaling</a></li>
+    </ul>
+  </section>
+</nav>
+
+<div class="large-12 content m0auto center">
+  <div class="top-banner mt20 top-ad"></div>
+</div>
+
+<div class="large-12 content m0auto">
+
+  <div class="large-4 mt40 right">
+    <div class="right-boxad panel p20 right"></div>
+  </div>
+
+  <div class="large-8">
+
+    <h1 class="mt20">MPS Ad Scaling Demo</h1>
+
+    <h2>Select Test Environment</h2>
+    
+    <select id="select-env">
+    </select>
+
+    <div class="panel">
+
+      <p>* All scaling is % of original size</p>
+
+      <div id="scale-top-50" class="button small">Scale Topbanner 50%</div>
+      <div id="scale-top-75" class="button small success">Scale Topbanner 75%</div>
+      <div id="scale-top-25" class="button small secondary">Scale Topbanner 25%</div>
+
+      <br />
+      
+      <div id="scale-box-75" class="button small success">Scale BoxAd 75%</div>
+      <div id="scale-box-50" class="button small">Scale BoxAd 50%</div>
+      <div id="scale-box-25" class="button small secondary">Scale BoxAd 25%</div>
+
+      <br />
+      <hr />
+      <br />
+
+      <div id="revert-top" class="button small alert">Revert Topbanner</div>
+      <div id="revert-box" class="button small alert">Revert BoxAd</div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  <div class="large-12 content m0auto">
+    <hr />
+    <p class="secondary">&copy; 2015, MPS.</p>
+  </div>
+  <script>typeof(mps.writeFooter)=='function' && mps.writeFooter();</script>
+</footer>
+
+<script>
+
+  var selectEnv = document.getElementById('select-env');
+
+  switch(env) {
+    case 'local.devmps.com':
+      console.log('case local');
+      selectEnv.innerHTML += '<option value="local.devmps.com" selected>Local</option>';
+      selectEnv.innerHTML += '<option value="stage.mps.com">Stage</option>';
+    break;
+    case 'stage.mps.com':
+      console.log('case stage');
+      selectEnv.innerHTML += '<option value="local.devmps.com">Local</option>';
+      selectEnv.innerHTML += '<option value="stage.mps.com" selected>Stage</option>';
+    break;
+  }
+  
+  document.getElementById('scale-top-50').addEventListener('click', function() {
+    mps._scaleAd('topbanner',.5);
+  });
+
+  document.getElementById('scale-box-50').addEventListener('click', function() {
+    mps._scaleAd('boxad',.5);
+  });
+
+  document.getElementById('scale-top-75').addEventListener('click', function() {
+    mps._scaleAd('topbanner',.75);
+  });
+
+  document.getElementById('scale-box-75').addEventListener('click', function() {
+    mps._scaleAd('boxad',.75);
+  });
+
+  document.getElementById('scale-top-25').addEventListener('click', function() {
+    mps._scaleAd('topbanner',.25);
+  });
+
+  document.getElementById('scale-box-25').addEventListener('click', function() {
+    mps._scaleAd('boxad',.25);
+  });
+
+  document.getElementById('revert-top').addEventListener('click', function() {
+    mps._scaleAdRevert('topbanner');
+  });
+
+  document.getElementById('revert-box').addEventListener('click', function() {
+    mps._scaleAdRevert('boxad');
+  });
+
+  document.getElementById('select-env').addEventListener('change', function(e) {
+    console.log(e);
+    console.log(this.value);
+    localStorage.setItem('adscale-env',this.value);
+    window.location.reload();
+  });
+</script>
+
+
+</body>
+</html>

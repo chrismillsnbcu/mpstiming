@@ -9,13 +9,15 @@
   <link rel="stylesheet" href="/css/styles.css"/>
 
   <script type="text/javascript">
-    var mpsopts = {'host':'dev-mps.nbcuni.com'};
-    var mpscall = {'site':'fandango-web'};
+    //var mpsopts = {'host':'dev-mps.nbcuni.com'};
+    var mpsopts = {'host':'local.devmps.com'};
+    //var mpscall = {'site':'fandango-web'};
+    var mpscall = {'site':'sandbox'};
     //mpscall.path = '/cover';
     mpscall.cat = 'TEST';
     mpscall.type = 'TEST';
     var mps = mps || {};
-    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+    document.write('<scr'+'ipt id="mps-ext-load" src="http://local.devmps.com/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
 
     mps.gptloadCallback = function() {
       mps.insertAd(mps._select('.right-boxad'),'boxad');
@@ -37,6 +39,7 @@
       <li><a href="/timing">Timing</a></li>
       <li class="active"><a href="/ad-block">Ad Block</a></li>
       <li><a href="/ad-block-ajax">Ad Block AJAX</a></li>
+      <li><a href="/ad-scaling">Ad Scaling</a></li>
     </ul>
   </section>
 </nav>
@@ -92,8 +95,6 @@
   // MPS Adblock.
   mps._adBlock = function() {
 
-    console.log('gpt loaded: ' + mps._gptloaded);
-
     adBlockTimer = adBlockTimer + 1000;
 
     if(adBlockEnabled === true || mps._gptError === true) {
@@ -102,34 +103,18 @@
       //_satellite.track('ad blocker enabled');
     }
 
-    console.log('gpt error: ' + mps._gptError);
     // GPT not loaded async, recheck in 1s.
     if(mps._gptError === undefined && adBlockTimer < 11000) {
-      console.log('mps._gptError is undefined, check again.  Try ' + adBlockTimer / 1000 + ' of 10.');
-      mps.demoDisplay('notloaded');
+      debugmode.log && console.log('mps._gptError is undefined, check again.  Try ' + adBlockTimer / 1000 + ' of 10.');
       setTimeout(mps._adBlock, 1000);
       return false;
     }
-
-    if(adBlockEnabled === true) {
-      mps.demoDisplay('filename');
-      debugmode.log && console.log('[mps._adBlock: Ad Block or file name ad blocker enabled.');
-      return false;
-    }
-    if(mps._gptError === true) {
-      mps.demoDisplay('blocked');
-      debugmode.log && console.log('[mps._adBlock: Ghostery, Disconnect, or script blocking ad blocker is enabled.');
-      return false;
-    }
-
-    // DEMO ONLY.
-    mps.demoDisplay();
 
   };
 
   // Ad blockers will block this file.
   var ads = document.createElement('script');
-  ads.src = '//'+mpsopts.host+'/js/advertising/ads.js';
+  ads.src = 'http://local.devmps.com/js/advertising/ads.js';
   ads.type = 'text/javascript';
   ads.async = false;
   ads.onload = function() { setTimeout(mps._adBlock, 500);},
