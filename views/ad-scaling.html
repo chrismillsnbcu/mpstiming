@@ -19,8 +19,8 @@
     var env = localStorage.getItem('adscale-env');
 
     if(!env) {
-      env = 'stage.mps.com';
-      localStorage.setItem('adscale-env','stage.mps.com');
+      env = 'stage-mps.nbcuni.com';
+      localStorage.setItem('adscale-env','stage-mps.nbcuni.com');
     }
 
     var mpscall = {
@@ -137,12 +137,12 @@
     case 'local.devmps.com':
       console.log('case local');
       selectEnv.innerHTML += '<option value="local.devmps.com" selected>Local</option>';
-      selectEnv.innerHTML += '<option value="stage.mps.com">Stage</option>';
+      selectEnv.innerHTML += '<option value="stage-mps.nbcuni.com">Stage</option>';
     break;
-    case 'stage.mps.com':
+    case 'stage-mps.nbcuni.com':
       console.log('case stage');
       selectEnv.innerHTML += '<option value="local.devmps.com">Local</option>';
-      selectEnv.innerHTML += '<option value="stage.mps.com" selected>Stage</option>';
+      selectEnv.innerHTML += '<option value="stage-mps.nbcuni.com" selected>Stage</option>';
     break;
   }
   
