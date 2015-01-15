@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/css/styles.css"/>
 
   <script type="text/javascript">
-    //var mpsopts = {'host':'dev-mps.nbcuni.com'};
+    /*//var mpsopts = {'host':'dev-mps.nbcuni.com'};
     var mpsopts = {'host':'local.devmps.com'};
     //var mpscall = {'site':'fandango-web'};
     var mpscall = {'site':'sandbox'};
@@ -17,7 +17,31 @@
     mpscall.cat = 'TEST';
     mpscall.type = 'TEST';
     var mps = mps || {};
-    document.write('<scr'+'ipt id="mps-ext-load" src="http://local.devmps.com/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+    document.write('<scr'+'ipt id="mps-ext-load" src="http://local.devmps.com/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');*/
+
+    var loc = window.location.hostname;
+    switch(loc) {
+      case 'localhost':
+        console.log('localhost');
+        var env = 'local.devmps.com';
+        break;
+      default:
+        console.log('stage');
+        var env = 'stage-mps.nbcuni.com';
+        break;
+    }
+
+    var mpscall = {
+      "content_id": "test-refresh",
+      "path": "TEST/refresh",
+      "site": "sandbox"
+    }
+    var mpsopts={
+      'updatecorrelator':true,
+      "host":env
+    };
+    var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
 
     mps.gptloadCallback = function() {
       mps.insertAd(mps._select('.right-boxad'),'boxad');
@@ -30,7 +54,7 @@
 <nav class="top-bar" data-topbar role="navigation">
   <ul class="title-area">
     <li class="name">
-      <h1><a href="#">Ad Block Test</a></h1>
+      <h1><a href="#">MPS Demo</a></h1>
     </li>
   </ul>
   <section class="top-bar-section">
@@ -95,12 +119,22 @@
   // MPS Adblock.
   mps._adBlock = function() {
 
+    console.log('adblock');
+
     adBlockTimer = adBlockTimer + 1000;
 
     if(adBlockEnabled === true || mps._gptError === true) {
       // Omniture ad blocking variables.
       //_satellite.setVar('ad blocker enabled', 'ads blocked');
       //_satellite.track('ad blocker enabled');
+    }
+
+    if(adBlockEnabled === true) {
+      mps.demoDisplay('filename');
+    } else if(mps._gptError === true) {
+      mps.demoDisplay('blocked');
+    } else {
+      mps.demoDisplay('success');
     }
 
     // GPT not loaded async, recheck in 1s.
