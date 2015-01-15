@@ -9,15 +9,6 @@
   <link rel="stylesheet" href="/css/styles.css"/>
 
   <script type="text/javascript">
-    /*//var mpsopts = {'host':'dev-mps.nbcuni.com'};
-    var mpsopts = {'host':'local.devmps.com'};
-    //var mpscall = {'site':'fandango-web'};
-    var mpscall = {'site':'sandbox'};
-    //mpscall.path = '/cover';
-    mpscall.cat = 'TEST';
-    mpscall.type = 'TEST';
-    var mps = mps || {};
-    document.write('<scr'+'ipt id="mps-ext-load" src="http://local.devmps.com/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');*/
 
     var loc = window.location.hostname;
     switch(loc) {
@@ -32,9 +23,10 @@
     }
 
     var mpscall = {
-      "content_id": "test-refresh",
-      "path": "TEST/refresh",
-      "site": "sandbox"
+      "cat": "homepage",
+      "path": "/fandango",
+      "site": "fandango-web",
+      "content_id":128
     }
     var mpsopts={
       'updatecorrelator':true,
@@ -154,13 +146,6 @@
   ads.onload = function() { setTimeout(mps._adBlock, 500);},
   ads.onerror = function() { setTimeout(mps._adBlock, 500);},
   document.getElementsByTagName('head')[0].appendChild(ads);
-  
-  // mps._adBlock() is called from an external file to prevent async issues.
-  /*var adBlockInit = document.createElement('script');
-  adBlockInit.src = 'http://local.devmps.com/js/advertising/mps-abInit.js';
-  adBlockInit.type = 'text/javascript';
-  adBlockInit.async = false;
-  document.getElementsByTagName('head')[0].appendChild(adBlockInit);*/
 
 </script>
 
