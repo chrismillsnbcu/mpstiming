@@ -138,7 +138,7 @@
 
   // Ad blockers will block this file.
   var ads = document.createElement('script');
-  ads.src = 'http://local.devmps.com/js/advertising/ads.js';
+  ads.src = '//'+mpsopts.host + '/js/advertising/ads.js';
   ads.type = 'text/javascript';
   ads.async = false;
   ads.onload = function() { setTimeout(mps._adBlock, 500);},
