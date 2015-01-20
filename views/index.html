@@ -9,33 +9,55 @@
   <link rel="stylesheet" href="/css/styles.css"/>
 
   <script type="text/javascript">
-    var time = new Date();
 
-    var mpsopts = {'host':'stage.mps.nbcnews.com'};
-    var mpscall = {'site':'nbcnews-web'};
-    mpscall.path = '/cover';
-    mpscall.cat = 'cover';
-    mpscall.type = 'cover';
+    var site = localStorage.getItem('mps-site');
+    var mpsopts = {'host':'stage-mps.nbcuni.com'};
+
+    // No site set, default to sandbox.
+    if(!site) {
+      localStorage.setItem('mps-site','fandango-web');
+      var mpscall = {
+        "cat": "homepage",
+        "path": "/fandango",
+        "site": "fandango-web",
+        "content_id":128
+      }
+    } else {
+      var mpscall = {};
+      mpscall.site = site;
+      switch(site) {
+        case 'bravo-web':
+          mpscall.type = 'layout';
+          mpscall.path = '\/';
+          mpscall.content_id = 'node262816';
+          mpscall.is_content = 1;
+          mpscall.pubdate = '1411136820';
+          mpscall.cat = '262816';
+          break;
+        case 'fandango-web':
+          mpscall.cat = 'homepage',
+          mpscall.path = '/fandango',
+          mpscall.content_id = 128
+          break;
+        case 'nbcnews-web':
+          mpsopts.host = 'stage.mps.nbcnews.com';
+          mpscall.path = '/cover';
+          mpscall.cat = 'cover';
+          mpscall.type = 'cover';
+          break;
+        case 'nhl-web':
+          mpscall.cat = 'homepage';
+          mpscall.path = '/home';
+          break;
+      }
+    }
+
     var mps = mps || {};
     document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
 
     mps.gptloadCallback = function() {
       mps.insertAd(mps._select('.top-banner'),'topbanner');
-      mps.insertAd(mps._select('.right-boxad'),'boxfront1');
-    }
-
-    mps.adloadCallback = function(eo) {
-      //debugmode.log && console.log('[mps:Detect] AD LOAD CALLBACK: '+eo._mps._slot)
-      if(!eo || !eo._mps || !eo._mps._elapsed || !eo._mps._slot) {
-        debugmode.log && console.log('[mps:Detect] FAILED: adloadCallback '+(eo._mps._elapsed))
-        return false;
-      }
-      if(eo._mps._slot == 'boxad') {
-        mps._ck.w('mps_detect_hp_load','$$$');
-        _satellite.setVar('ad load time', eo._mps._elapsed);
-        _satellite.track('home page ad loaded');
-        debugmode.log && console.log('[mps:Detect] track load at '+(eo._mps._elapsed))
-      }
+      //mps.insertAd(mps._select('.right-boxad'),'boxfront1');
     }
   </script>
 
@@ -75,7 +97,7 @@
 </nav>
 
 <div class="large-12 content m0auto center">
-  <div class="top-banner mt20 top-ad"></div>
+  <div class="top-banner ad-topbanner mt20 top-ad"></div>
 </div>
 
 <div class="large-12 content m0auto">
@@ -89,6 +111,8 @@
     <div class="panel mt20"><ul id="results"></ul></div>
 
     <h1 class="mt20">MPS Demo</h1>
+
+    <select id="site-select"></select>
 
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tempus metus id accumsan vulputate. Nulla facilisis posuere libero, et laoreet nibh viverra et. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras a elit ac leo accumsan tristique. Vivamus pulvinar risus mauris. Ut eu elit porttitor, egestas massa a, consectetur mauris. Cras accumsan id justo a dapibus. Integer finibus dapibus leo eu accumsan. Nullam risus erat, molestie a mattis in, commodo vitae quam. Ut tempor diam est, sit amet luctus massa rhoncus nec. Nulla tempor vel magna quis ullamcorper. Maecenas urna purus, efficitur vel enim sed, vestibulum consequat libero. In non vehicula felis.<p>
 
@@ -109,6 +133,48 @@
   </div>
   <script>typeof(mps.writeFooter)=='function' && mps.writeFooter();</script>
 </footer>
+
+<script>
+  // Init site select drop down.
+  var siteSelect = document.getElementById('site-select');
+
+  // Build site select.
+  siteSelect.innerHTML += '<option value="bravo-apps">Bravo Apps</option>';
+  siteSelect.innerHTML += '<option value="bravo-web">Bravo Web</option>';
+  siteSelect.innerHTML += '<option value="cnbc-prime">CNBC Prime</option>';
+  siteSelect.innerHTML += '<option value="eonline-apps">E! Online Apps</option>';
+  siteSelect.innerHTML += '<option value="eonline-web">E! Online Web</option>';
+  siteSelect.innerHTML += '<option value="fandango-apps">Fandango Apps</option>';
+  siteSelect.innerHTML += '<option value="fandango-web">Fandango Web</option>';
+  siteSelect.innerHTML += '<option value="movies-web">Movies Web</option>';
+  siteSelect.innerHTML += '<option value="nbc-apps">NBC Apps</option>';
+  siteSelect.innerHTML += '<option value="nbc-snl">NBC SNL</option>';
+  siteSelect.innerHTML += '<option value="nbc-tonightshow">NBC Tonight Show</option>';
+  siteSelect.innerHTML += '<option value="nbcnews-web">NBC News Web</option>';
+  siteSelect.innerHTML += '<option value="nbcsports-web">NBC Sports Web</option>';
+  siteSelect.innerHTML += '<option value="nhl-web">NHL Web</option>';
+  siteSelect.innerHTML += '<option value="partners">Partners</option>';
+  siteSelect.innerHTML += '<option value="recode-web">Recode Web</option>';
+  siteSelect.innerHTML += '<option value="sandbox">Sandbox</option>';
+  siteSelect.innerHTML += '<option value="telemundo-web">Telemundo Web</option>';
+  siteSelect.innerHTML += '<option value="usa-web">USA Web</option>';
+
+  // Set selected site.
+  var siteOption = siteSelect.getElementsByTagName('option');
+  for(var i=0; i<siteOption.length; i++) {
+    if(siteOption[i].value === site) {
+      siteOption[i].selected = true;
+    }
+  }
+
+  // Change site function.
+  siteSelect.addEventListener('change', function() {
+    localStorage.setItem('mps-site', this.value);
+    // TODO - re init MPS without page refresh.
+    window.location.reload();
+  });
+
+</script>
 
 </body>
 </html>

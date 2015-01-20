@@ -78,6 +78,13 @@ app.get('/ad-loaded', function(req, res) {
 
 });
 
+// Bravo test.
+app.get('/bravo', function(req, res) {
+
+  res.render('bravo.html');
+
+});
+
 /***** APIs *****/
 // Webpagetest API.
 app.get('/api/site/', function(req, res) {
