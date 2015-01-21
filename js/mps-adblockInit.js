@@ -1,1 +1,1 @@
-setTimeout(mps._adBlock, 500);;
+setTimeout(mps._adBlock, 500);
