@@ -78,10 +78,10 @@ app.get('/ad-loaded', function(req, res) {
 
 });
 
-// Bravo test.
-app.get('/bravo', function(req, res) {
+// Ad Block Fandango Component Detection.
+app.get('/adblock-fandango', function(req, res) {
 
-  res.render('bravo.html');
+  res.render('adblock-fandango.html');
 
 });
 
