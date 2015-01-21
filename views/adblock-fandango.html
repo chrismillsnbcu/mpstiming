@@ -41,6 +41,7 @@
     _satellite.setVar = function(ov, val) {
       console.log('[mps: ADBLOCK] DEMO omniture variable: ' + ov);
       console.log('[mps: ADBLOCK] DEMO omniture value: ' + val);
+      document.getElementById('omniture-vars').innerHTML = '<br />Omniture variable <strong>' + ov + '</strong> set.<br />Omniture type value <strong>' + val + '</strong> set.';
     };
   </script>
 
@@ -75,6 +76,8 @@
     <h1 class="mt20">MPS Demo</h1>
 
     <div id="ad-blocker">Check console for [mps:ADBLOCK] with debug mode enabled to see if an ad blocker is enabled.</div>
+
+    <div id="omniture-vars"></div>
 
   </div>
 
