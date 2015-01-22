@@ -85,6 +85,13 @@ app.get('/adblock-fandango', function(req, res) {
 
 });
 
+// Error Tracking.
+app.get('/error-tracking', function(req, res) {
+
+  res.render('error-tracking.html');
+
+});
+
 /***** APIs *****/
 // Webpagetest API.
 app.get('/api/site/', function(req, res) {
