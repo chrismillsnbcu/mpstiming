@@ -74,18 +74,20 @@
 <script>
   // Error tracking.
   errorTracking = function errorCaught( ev ) {
+    var err = 'Unknown javascript error reported from a legacy browser.';
     var errFile = '';
     var errLine = '';
+    if(ev.error) { err = ev.error; }
     if(ev.filename) { errFile = ev.filename; }
     if(ev.lineno) { errLine = ev.lineno; }
-    var errStr = 'ERROR: ' + ev.error + ', LOCATION: ' + errFile + ', LINE NUMBER:' + errLine;
+    var errStr = 'ERROR: ' + err + ', LOCATION: ' + errFile + ', LINE NUMBER:' + errLine;
     // Omniture Error Tracking.
     //_satellite.setVar('jsError', errStr);
 
     /***** DEMO ONLY ******/
     document.getElementById('error').className = 'panel';
     var errMsg = document.getElementById('errMsg');
-    errMsg.innerHTML = '<strong>Message:</strong> ' + ev.error + '<br /><strong>Location:</strong> ' + errFile + '<br /><strong>Line Number:</strong> ' + errLine;
+    errMsg.innerHTML = '<strong>Message:</strong> ' + err + '<br /><strong>Location:</strong> ' + errFile + '<br /><strong>Line Number:</strong> ' + errLine;
     var omDetails = document.getElementById('omnitureDetails');
     omDetails.className = 'panel';
     omDetails.innerHTML = '<h2>Omniture Variable Example</h2><p class="small">_satellite.setVar("jsError", ' + errStr + ');</p>';
