@@ -38,6 +38,9 @@ h2 {
 .none {
 	display:none;
 }
+.small {
+	font-size:.8em;
+}
 .chart {
 	width:1355px;
 	overflow:hidden;
