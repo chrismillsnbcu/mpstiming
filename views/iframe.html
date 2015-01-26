@@ -64,55 +64,5 @@
   </div>
 </footer>
 
-<script>
-  // Error tracking.
-  errorTracking = function errorCaught( ev ) {
-    var err = 'Unknown javascript error reported from a legacy browser.';
-    var errFile = '';
-    var errLine = '';
-    if(ev.error) { err = ev.error; }
-    if(ev.filename) { errFile = ev.filename; }
-    if(ev.lineno) { errLine = ev.lineno; }
-    var errStr = 'ERROR: ' + err + ', LOCATION: ' + errFile + ', LINE NUMBER:' + errLine;
-    // Omniture Error Tracking.
-    //_satellite.setVar('jsError', errStr);
-
-    /***** DEMO ONLY ******/
-    document.getElementById('error').className = 'panel';
-    var errMsg = document.getElementById('errMsg');
-    errMsg.innerHTML = '<strong>Message:</strong> ' + err + '<br /><strong>Location:</strong> ' + errFile + '<br /><strong>Line Number:</strong> ' + errLine;
-    var omDetails = document.getElementById('omnitureDetails');
-    omDetails.className = 'panel';
-    omDetails.innerHTML = '<h2>Omniture Variable Example</h2><p class="small">_satellite.setVar("jsError", ' + errStr + ');</p>';
-    /***** /DEMO ONLY ******/
-
-  };
-
-  /***** DEMO ONLY ******/
-  // Error tracking events.
-  if(window.addEventListener) {
-    window.addEventListener( "error", errorTracking, false );
-    document.getElementById('errRef').addEventListener('click', function() {
-      var refErr = asdf.asdf.length;
-    });
-    document.getElementById('errTyp').addEventListener('click', function() {
-      var typeErrVar = null;
-      var typeErr = typeErrVar();
-    });
-    document.getElementById('errRan').addEventListener('click', function() {
-      Array.apply(null, new Array(1000000)).map(Math.random);
-    });
-    document.getElementById('errURI').addEventListener('click', function() {
-      decodeURIComponent("%");
-    });
-    document.getElementById('errSyn').addEventListener('click', function() {
-      var script = document.createElement('script');
-      script.text = document.getElementById('error');
-      document.getElementsByTagName('head')[0].appendChild(script);
-    });
-    /***** /DEMO ONLY ******/
-  }
-</script>
-
 </body>
 </html>
