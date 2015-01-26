@@ -92,6 +92,13 @@ app.get('/error-tracking', function(req, res) {
 
 });
 
+// iFrame Integration.
+app.get('/iframe', function(req, res) {
+
+  res.render('iframe.html');
+
+});
+
 /***** APIs *****/
 // Webpagetest API.
 app.get('/api/site/', function(req, res) {
