@@ -99,6 +99,13 @@ app.get('/iframe', function(req, res) {
 
 });
 
+// Detect Display.
+app.get('/detect-display', function(req, res) {
+
+  res.render('detect.html');
+
+});
+
 /***** APIs *****/
 // Webpagetest API.
 app.get('/api/site/', function(req, res) {
