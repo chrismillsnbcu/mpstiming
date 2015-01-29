@@ -77,6 +77,9 @@
             msg = 'Ad container not in viewport at all.  Show Ad:';
             break;
           case 'display':
+            if(perc === 1) {
+              perc = 100;
+            }
             msg = perc + '% of the ad container is visible in the viewport.  Show Ad:';
             break;
         }
@@ -110,41 +113,8 @@
           adShowing >= (elA / 2) ? showAd = true : showAd = false;
           this.log('display', showAd, (adShowing / elA));
 
-          console.log('Ad is in viewport, calculate percent.');
         }
         return showAd;
-
-        /*if((vpH + scY) >= elY && (vpW + scX) >= elX
-        && (vpH - scY) <= elY && (vpW - scX) <= elX) {
-          console.log('in viewport');
-        } else {
-          console.log('not in viewport at all.');
-        }*/
-
-
-        /*if((vpH + scY) <= elY || (vpW + scX) <= elX) { this.log('not_in_viewport', showAd); return showAd; }
-        else {
-          // Calculate portion of ad in viewport, 50% visible to show the ad.
-          var widthShowing = ((vpW - elX) > elW) ? elW : vpW - elX;
-          var heightShowing = ((vpH - elY) > elH) ? elH : vpH - elH;
-
-          console.log('height showing without offset:' + heightShowing);
-          console.log('width shwoing without offset: ' + widthShowing);
-
-          // Adjust for offset if scrolling.
-          if(scY > elY) { heightShowing = heightShowing - (scY - elY); }
-          if(scX > 0) { widthShowing = (widthShowing + scX) > elW ? elW : widthShowing + scX; }
-
-          console.log('height showing after offset subtracted:' + heightShowing);
-          console.log('width showing after offset added: ' + widthShowing);
-
-          console.log(widthShowing, heightShowing);
-          var adShowing = widthShowing * heightShowing;
-
-          adShowing >= (elA / 2) ? showAd = true : showAd = false;
-          this.log('display', showAd, (adShowing / elA));
-          return showAd;
-        }*/
       },
       load: function() {
         // Check and load ads from event listener.
