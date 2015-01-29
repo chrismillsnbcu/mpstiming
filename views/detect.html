@@ -78,19 +78,30 @@
             msg = 'Ad container not in viewport at all.  Show Ad:';
             break;
           case 'display':
-            if(perc === 1) {
-              perc = 100;
-            }
+            perc = perc * 100;
             msg = perc + '% of the ad container is visible in the viewport.  Show Ad:';
             break;
         }
         console.log('[MPS: DETECT DISPLAY]: ' + msg + ' ' + show);
       },
       //
+      getOffset: function(s) {
+        var top = 0, left = 0;
+          do {
+            top += s.offsetTop  || 0;
+            left += s.offsetLeft || 0;
+            s = s.offsetParent;
+          } while(s);
+
+          return {
+            top: top,
+            left: left
+          };
+      },
       detect: function(s) {
         //TODO calculate padding and scrollbar width.
-        var vp = mps._viewport(), vpW = vp[0], vpH = vp[1], elY = s.offsetTop,
-        elX = s.offsetLeft, elW = s.offsetWidth, elH = s.offsetHeight,
+        var vp = mps._viewport(), vpW = vp[0], vpH = vp[1], elO = this.getOffset(s), elY = elO.top,
+        elX = elO.left, elW = s.offsetWidth, elH = s.offsetHeight,
         elA = elW * elH, scY = window.pageYOffset, scX = window.pageXOffset,
         showAd = false;
 
@@ -100,19 +111,43 @@
         var vpMinY = elY < (scY + vpH);
         var vpMaxY = scY < (elY + elH);
 
+        console.log(vpMinX, vpMaxX, vpMinY, vpMaxY);
+
         if(vpMinX && vpMinY && vpMaxX && vpMaxY) {
           // Calculate atleast 50% of ad is available.
-          var widthShowing = ((vpW - elX) > elW) ? elW : vpW - elX;
-          var heightShowing = ((vpH - elY) > elH) ? elH : vpH - elH;
+
+          var heightShowing = ((vpH - elY) >= elH) ? elH : vpH - elH;
+
+          var leftCutoff = 0;
+          var rightCutoff = 0;
+          var topCutoff = 0;
+          var bottomCutoff = 0;
           
-          // Adjust for offset if scrolling.
-          if(scY > elY) { heightShowing = heightShowing - (scY - elY); }
-          if(scX > 0) { widthShowing = (widthShowing + scX) > elW ? elW : widthShowing + scX; }
+          if(scX > elX) {
+            leftCutoff = scX - elX;
+          }
 
-          var adShowing = widthShowing * heightShowing;
+          if((elX + elW) > (scX + vpW)) {
+            rightCutoff = (elX + elW) - (scX + vpW);
+          }
 
-          adShowing >= (elA / 2) ? showAd = true : showAd = false;
-          this.log('display', showAd, (adShowing / elA));
+          if(scY > elY) {
+            topCutoff = scY - elY;
+          }
+
+          if((elY + elH) > (scY + vpH)) {
+            bottomCutoff = (elY + elH) - (scY + vpH)
+          }
+
+          var widthShowing = elW - leftCutoff;
+          widthShowing = widthShowing - rightCutoff;
+
+          var heightShowing = elH - topCutoff;
+          heightShowing = heightShowing - bottomCutoff;
+
+          var areaShowing = widthShowing * heightShowing;
+
+          areaShowing >= (elA / 2) ? showAd = true : showAd = false;
 
         }
         return showAd;
@@ -160,6 +195,7 @@
 
   <script>
     mps.gptloadCallback = function() {
+      //mps._display.render(mps._select('.top-banner'),'topbanner');
       mps._display.render(mps._select('.footer-ad'),'topbanner');
       mps._display.render(mps._select('.right-boxad'),'boxad');
     };
@@ -202,10 +238,6 @@
   </section>
 </nav>
 
-<div class="large-12 content m0auto center">
-  <div class="top-banner ad-topbanner mt20 top-ad" id="top-banner"></div>
-</div>
-
 <div class="large-12 content m0auto">
 
   <div class="large-4 mt40 right">
@@ -246,7 +278,7 @@
 
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tempus metus id accumsan vulputate. Nulla facilisis posuere libero, et laoreet nibh viverra et. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras a elit ac leo accumsan tristique. Vivamus pulvinar risus mauris. Ut eu elit porttitor, egestas massa a, consectetur mauris. Cras accumsan id justo a dapibus. Integer finibus dapibus leo eu accumsan. Nullam risus erat, molestie a mattis in, commodo vitae quam. Ut tempor diam est, sit amet luctus massa rhoncus nec. Nulla tempor vel magna quis ullamcorper. Maecenas urna purus, efficitur vel enim sed, vestibulum consequat libero. In non vehicula felis.<p>
 
-      <div class="footer-ad2"></div>
+    <div class="footer-ad2"></div>
 
     <p>Nam aliquam nec nulla ac luctus. Etiam hendrerit erat non mi congue, lacinia tincidunt massa commodo. Vestibulum nec tempus orci, eget mollis est. Vivamus vel nulla lobortis ipsum condimentum hendrerit vitae at ex. Donec mollis aliquet sollicitudin. Suspendisse quis sem nec ipsum lacinia euismod. Maecenas porta facilisis libero sed facilisis. Praesent fringilla cursus aliquet.</p>
 
