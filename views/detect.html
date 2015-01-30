@@ -78,7 +78,6 @@
             msg = 'Ad container not in viewport at all.  Show Ad:';
             break;
           case 'display':
-            perc = perc * 100;
             msg = perc + '% of the ad container is visible in the viewport.  Show Ad:';
             break;
         }
@@ -146,6 +145,12 @@
           heightShowing = heightShowing - bottomCutoff;
 
           var areaShowing = widthShowing * heightShowing;
+
+          var perc = areaShowing / elA;
+
+          perc = Math.round(perc * 100);
+
+          this.log('display',showAd, perc);
 
           areaShowing >= (elA / 2) ? showAd = true : showAd = false;
 
