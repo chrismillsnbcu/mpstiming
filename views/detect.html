@@ -104,6 +104,8 @@
         elA = elW * elH, scY = window.pageYOffset, scX = window.pageXOffset,
         showAd = false;
 
+        if(console && console.log) { console.log('vars for ie debug: ' + vpW, vpH, elY, elX, elW, elH, elA); }
+
         // Set min viewport X to see any part of ad.
         var vpMinX = elX < (scX + vpW);
         var vpMaxX = scX < (elX + elW);
