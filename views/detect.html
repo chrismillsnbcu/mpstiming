@@ -101,18 +101,13 @@
         //TODO calculate padding and scrollbar width.
         var vp = mps._viewport(), vpW = vp[0], vpH = vp[1], elO = this.getOffset(s), elY = elO.top,
         elX = elO.left, elW = s.offsetWidth, elH = s.offsetHeight,
-        elA = elW * elH, scY = window.pageYOffset, scX = window.pageXOffset,
-        showAd = false;
-
-        if(console && console.log) { console.log('vars for ie debug: ' + 'VPwidth: ' + vpW, 'VPheight: ' + vpH, 'y: ' + elY, 'x: ' + elX, 'width: ' + elW, 'height: ' + elH, 'area: ' + elA); }
+        elA = elW * elH, scY = window.pageYOffset ? window.pageYOffset : window.document.body.scrollTop, scX = window.pageXOffset ? window.pageXOffset : window.document.body.scrollLeft, showAd = false;
 
         // Set min viewport X to see any part of ad.
         var vpMinX = elX < (scX + vpW);
         var vpMaxX = scX < (elX + elW);
         var vpMinY = elY < (scY + vpH);
         var vpMaxY = scY < (elY + elH);
-
-        if(console && console.log) { console.log('minX: ' + vpMinX, 'maxX: ' + vpMaxX, 'minY: ' + vpMinY, 'maxY: ' + vpMaxY); }
 
         if(vpMinX && vpMinY && vpMaxX && vpMaxY) {
           // Calculate atleast 50% of ad is available.
