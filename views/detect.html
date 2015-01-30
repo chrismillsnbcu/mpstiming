@@ -194,8 +194,8 @@
       window.addEventListener('resize', mps._display.load, false);
     } else {
       // IE8.
-      window.attachEvent('resize', mps._display.load, false);
-      window.attachEvent('scroll', mps._display.load, false);
+      window.attachEvent('onresize', mps._display.load);
+      window.attachEvent('onscroll', mps._display.load);
     }
     
   </script>
