@@ -61,7 +61,7 @@
             'elem': s,
             'ad': a
           }
-          console.log('[MPS: DETECT DISPLAY]: Render, ad unit already pending: ' + this.pending(a));
+          if(console && console.log) { console.log('[MPS: DETECT DISPLAY]: Render, ad unit already pending: ' + this.pending(a)); }
           if(!this.pending(a)) {
             mps._pending.push(ad);
           }
@@ -81,7 +81,7 @@
             msg = perc + '% of the ad container is visible in the viewport.  Show Ad:';
             break;
         }
-        console.log('[MPS: DETECT DISPLAY]: ' + msg + ' ' + show);
+        if(console && console.log) { console.log('[MPS: DETECT DISPLAY]: ' + msg + ' ' + show); }
       },
       //
       getOffset: function(s) {
@@ -161,7 +161,7 @@
         // Check and load ads from event listener.
         var ads = mps._pending;
         if(ads.length > 0) {
-          console.log('[MPS:DETECT PENDING ADS]: pending ads detected.');
+          if(console && console.log) { console.log('[MPS:DETECT PENDING ADS]: pending ads detected.'); }
           for(var i in ads) { mps._display.render(ads[i].elem, ads[i].ad); }
         }
       },
