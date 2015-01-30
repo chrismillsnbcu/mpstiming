@@ -194,8 +194,12 @@
       window.addEventListener('resize', mps._display.load, false);
     } else {
       // IE8.
-      window.attachEvent('onresize', mps._display.load);
-      window.attachEvent('onscroll', mps._display.load);
+      window.attachEvent('onresize', function() {
+        mps._display.load();
+      });
+      window.attachEvent('onscroll', function() {
+        mps._display.load();
+      });
     }
     
   </script>
