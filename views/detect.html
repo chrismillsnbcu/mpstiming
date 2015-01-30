@@ -104,13 +104,15 @@
         elA = elW * elH, scY = window.pageYOffset, scX = window.pageXOffset,
         showAd = false;
 
-        if(console && console.log) { console.log('vars for ie debug: ' + vpW, vpH, elY, elX, elW, elH, elA); }
+        if(console && console.log) { console.log('vars for ie debug: ' + 'VPwidth: ' + vpW, 'VPheight: ' + vpH, 'y: ' + elY, 'x: ' + elX, 'width: ' + elW, 'height: ' + elH, 'area: ' + elA); }
 
         // Set min viewport X to see any part of ad.
         var vpMinX = elX < (scX + vpW);
         var vpMaxX = scX < (elX + elW);
         var vpMinY = elY < (scY + vpH);
         var vpMaxY = scY < (elY + elH);
+
+        if(console && console.log) { console.log('minX: ' + vpMinX, 'maxX: ' + vpMaxX, 'minY: ' + vpMinY, 'maxY: ' + vpMaxY); }
 
         if(vpMinX && vpMinY && vpMaxX && vpMaxY) {
           // Calculate atleast 50% of ad is available.
