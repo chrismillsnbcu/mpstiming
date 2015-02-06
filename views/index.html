@@ -24,6 +24,12 @@
       mpscall.cat = 'homepage',
       mpscall.path = '/',
       mpscall.content_id = 128
+      var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+      mps.gptloadCallback = function() {
+        mps.insertAd(mps._select('.top-banner'),'topbanner');
+        mps.insertAd(mps._select('.right-boxad'),'boxad');
+      }
     } else {
       mpscall.site = site;
       switch(site) {
@@ -35,6 +41,12 @@
           mpscall.type = "layout";
           mpscall.pubdate = "1411136820";
           mpscall.cat = "262816";
+          var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+          mps.gptloadCallback = function() {
+            mps.insertAd(mps._select('.top-banner'),'topbanner');
+            mps.insertAd(mps._select('.right-boxad'),'topbox');
+          }
         break;
         case 'cnbc-prime':
           mpsopts = nbcUrl;
@@ -44,16 +56,34 @@
           mpscall.content_id = '115';
           mpscall.is_content = 0;
           mpscall.site = 'cnbc-prime';
+          var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+          mps.gptloadCallback = function() {
+            mps.insertAd(mps._select('.top-banner'),'topbanner');
+            mps.insertAd(mps._select('.right-boxad'),'topbox');
+          }
         break;
         case 'fandango-web':
           mpsopts = nbcUrl;
           mpscall.cat = 'homepage',
           mpscall.path = '/',
           mpscall.content_id = 128
+          var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+          mps.gptloadCallback = function() {
+            mps.insertAd(mps._select('.top-banner'),'topbanner');
+            mps.insertAd(mps._select('.right-boxad'),'boxad');
+          }
         break;
         case 'fandango-mobile':
           mpsopts = nbcUrl;
           mpscall.cat = "home";
+          var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+          mps.gptloadCallback = function() {
+            mps.insertAd(mps._select('.top-banner'),'banner');
+            mps.insertAd(mps._select('.right-boxad'),'bannermid');
+          }
           break;
         case 'hip2save':
           mpsopts = nbcUrlnews;
@@ -63,12 +93,24 @@
           mpscall.cats = "homepage";
           mpscall.type = "cover";
           mpscall.tags = "";
+          var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+          mps.gptloadCallback = function() {
+            mps.insertAd(mps._select('.top-banner'),'sideboxone');
+            mps.insertAd(mps._select('.right-boxad'),'sideboxtwo');
+          }
           break;
         case 'nbcnews-web':
           mpsopts = nbcUrlnews;
           mpscall.cat = 'cover';
           mpscall.path = '/cover';
           mpscall.type = 'cover';
+          var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+          mps.gptloadCallback = function() {
+            mps.insertAd(mps._select('.top-banner'),'topbanner');
+            mps.insertAd(mps._select('.right-boxad'),'boxfront1');
+          }
           break;
         case 'nbc-tonightshow':
           console.log('called');
@@ -76,6 +118,12 @@
           mpscall.type = "homepage";
           mpscall.site = "nbc-tonightshow";
           mpscall.cat = "the-tonight-show";
+          var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+          mps.gptloadCallback = function() {
+            mps.insertAd(mps._select('.top-banner'),'topleader');
+            mps.insertAd(mps._select('.right-boxad'),'topbox');
+          }
           break;
         case 'recode-web':
           mpsopts = nbcUrl;
@@ -84,6 +132,12 @@
           mpscall.type = "frontpage";
           mpscall.is_content = "";
           mpscall.section = "homepage";
+          var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+          mps.gptloadCallback = function() {
+            mps.insertAd(mps._select('.top-banner'),'topbanner');
+            mps.insertAd(mps._select('.right-boxad'),'boxad');
+          }
           break;
         case 'telemundo-web':
           mpsopts = nbcUrl;
@@ -92,6 +146,12 @@
           mpscall.is_content = 0;
           mpscall.type = "other";
           mpscall.cat = "home";
+          var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+          mps.gptloadCallback = function() {
+            mps.insertAd(mps._select('.top-banner'),'topbanner');
+            mps.insertAd(mps._select('.right-boxad'),'mosaicadone');
+          }
           break;
         case 'todayshow':
           mpsopts = nbcUrlnews;
@@ -99,87 +159,14 @@
           mpscall.path = 'homepage';
           mpscall.is_content = '0';
           mpscall.type = "cover";
+          var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+          mps.gptloadCallback = function() {
+            mps.insertAd(mps._select('.top-banner'),'topbanner');
+            mps.insertAd(mps._select('.right-boxad'),'boxflex');
+          }
           break;
       }
-    }
-    var mps = mps || {};
-    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
-
-    switch(site) {
-      case 'bravo-web':
-        mps.gptloadCallback = function() {
-          mps.insertAd(mps._select('.top-banner'),'topbanner');
-          mps.insertAd(mps._select('.right-boxad'),'topbox');
-        }
-        break;
-      case 'cnbc-prime':
-        mps.gptloadCallback = function() {
-          mps.insertAd(mps._select('.top-banner'),'topbanner');
-          mps.insertAd(mps._select('.right-boxad'),'topbox');
-        }
-        break;
-      case 'fandango-mobile':
-        mps.gptloadCallback = function() {
-          mps.insertAd(mps._select('.top-banner'),'banner');
-          mps.insertAd(mps._select('.right-boxad'),'bannermid');
-        }
-        break;
-      case 'fandango-web':
-        console.log('selected');
-        mps.gptloadCallback = function() {
-          console.log('callback');
-          mps.insertAd(mps._select('.top-banner'),'topbanner');
-          mps.insertAd(mps._select('.right-boxad'),'boxad');
-        }
-        break;
-      case 'hip2save':
-        mps.gptloadCallback = function() {
-          mps.insertAd(mps._select('.top-banner'),'sideboxone');
-          mps.insertAd(mps._select('.right-boxad'),'sideboxtwo');
-        }
-        break;
-      case 'nbc-tonightshow':
-        mps.gptloadCallback = function() {
-          mps.insertAd(mps._select('.top-banner'),'topleader');
-          mps.insertAd(mps._select('.right-boxad'),'topbox');
-        }
-      break;
-      case 'nbcnews-apps':
-        mps.gptloadCallback = function() {
-          mps.insertAd(mps._select('.top-banner'),'topbanner');
-          mps.insertAd(mps._select('.right-boxad'),'boxfront1');
-        }
-        break;
-      case 'nbcnews-web':
-        mps.gptloadCallback = function() {
-          mps.insertAd(mps._select('.top-banner'),'topbanner');
-          mps.insertAd(mps._select('.right-boxad'),'boxfront1');
-        }
-        break;
-      case 'telemundo-web':
-        mps.gptloadCallback = function() {
-          mps.insertAd(mps._select('.top-banner'),'topbanner');
-          mps.insertAd(mps._select('.right-boxad'),'mosaicadone');
-        }
-        break;
-      case 'todayshow':
-        mps.gptloadCallback = function() {
-          mps.insertAd(mps._select('.top-banner'),'topbanner');
-          mps.insertAd(mps._select('.right-boxad'),'boxflex');
-        }
-        break;
-      case 'todayshow-apps':
-        mps.gptloadCallback = function() {
-          mps.insertAd(mps._select('.top-banner'),'topbanner');
-          mps.insertAd(mps._select('.right-boxad'),'boxflex');
-        }
-        break;
-      case 'recode-web':
-        mps.gptloadCallback = function() {
-          mps.insertAd(mps._select('.top-banner'),'topbanner');
-          mps.insertAd(mps._select('.right-boxad'),'boxad');
-        }
-        break;
     }
   </script>
 
@@ -249,20 +236,16 @@
     var siteSelect = document.getElementById('site-select');
 
     // Build site select.
-    siteSelect.innerHTML += '<option value="fandango-web">Fandango</option>';
-    siteSelect.innerHTML += '<option value="nbc-tonightshow">NBC Tonightshow</option>';
     siteSelect.innerHTML += '<option value="bravo-web">Bravo</option>';
     siteSelect.innerHTML += '<option value="cnbc-prime">CNBC Prime</option>';
+    siteSelect.innerHTML += '<option value="fandango-web">Fandango</option>';
     siteSelect.innerHTML += '<option value="fandango-mobile">Fandango Mobile</option>';
-    //siteSelect.innerHTML += '<option value="nbc-sports-web">NBC Sports Web</option>';
+    siteSelect.innerHTML += '<option value="hip2save">Hip2Save</option>';
+    siteSelect.innerHTML += '<option value="nbcnews-web">NBC News</option>';
+    siteSelect.innerHTML += '<option value="nbc-tonightshow">NBC Tonightshow</option>';
     siteSelect.innerHTML += '<option value="recode-web">Recode</option>';
     siteSelect.innerHTML += '<option value="telemundo-web">Telemundo</option>';
-    siteSelect.innerHTML += '<option value="nbcnews-web">NBC News</option>';
-    siteSelect.innerHTML += '<option value="nbcnews-apps">NBC News Apps</option>';
     siteSelect.innerHTML += '<option value="todayshow">Todayshow</option>';
-    siteSelect.innerHTML += '<option value="todayshow-apps">Todayshow Apps</option>';
-    siteSelect.innerHTML += '<option value="hip2save">Hip2Save</option>';
-    //siteSelect.innerHTML += '<option value="gardenweb">Garden Web</option>';
 
     // Set selected site.
     var siteOption = siteSelect.getElementsByTagName('option');
