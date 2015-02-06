@@ -9,75 +9,182 @@
   <link rel="stylesheet" href="/css/styles.css"/>
 
   <script type="text/javascript">
-
     var site = localStorage.getItem('mps-site');
-    var mpsopts = {'host':'stage-mps.nbcuni.com'};
+    var mpsopts = null;
+    var nbcUrlnews = {'host':'stage.mps.nbcnews.com'};
+    var nbcUrl = {'host':'stage-mps.nbcuni.com'};
+    var mpscall = {};
 
-    // No site set, default to sandbox.
+    // No site set, default to fandango.
     if(!site) {
+      site = 'fandango-web';
       localStorage.setItem('mps-site','fandango-web');
-      var mpscall = {
-        "cat": "homepage",
-        "path": "/",
-        "site": "fandango-web",
-        "content_id":128
-      }
+      mpscall.site = site;
+      mpsopts = nbcUrl;
+      mpscall.cat = 'homepage',
+      mpscall.path = '/',
+      mpscall.content_id = 128
     } else {
-      var mpscall = {};
       mpscall.site = site;
       switch(site) {
         case 'bravo-web':
-          mpscall.type = 'layout';
-          mpscall.path = '\/';
-          mpscall.content_id = 'node262816';
+          mpsopts = nbcUrl;
+          mpscall.path = "\/";
+          mpscall.content_id = "node262816";
           mpscall.is_content = 1;
-          mpscall.pubdate = '1411136820';
-          mpscall.cat = '262816';
-          break;
+          mpscall.type = "layout";
+          mpscall.pubdate = "1411136820";
+          mpscall.cat = "262816";
+        break;
+        case 'cnbc-prime':
+          mpsopts = nbcUrl;
+          mpscall.type = 'landing';
+          mpscall.title = 'Network Home';
+          mpscall.cat = 'CNBC Prime';
+          mpscall.content_id = '115';
+          mpscall.is_content = 0;
+          mpscall.site = 'cnbc-prime';
+        break;
         case 'fandango-web':
+          mpsopts = nbcUrl;
           mpscall.cat = 'homepage',
           mpscall.path = '/',
           mpscall.content_id = 128
+        break;
+        case 'fandango-mobile':
+          mpsopts = nbcUrl;
+          mpscall.cat = "home";
+          break;
+        case 'hip2save':
+          mpsopts = nbcUrlnews;
+          mpscall.path = null;
+          mpscall.id = "";
+          mpscall.title = "Hip2Save Homepage";
+          mpscall.cats = "homepage";
+          mpscall.type = "cover";
+          mpscall.tags = "";
           break;
         case 'nbcnews-web':
-          mpsopts.host = 'stage.mps.nbcnews.com';
-          mpscall.path = '/cover';
+          mpsopts = nbcUrlnews;
           mpscall.cat = 'cover';
+          mpscall.path = '/cover';
           mpscall.type = 'cover';
           break;
-        case 'nhl-web':
+        case 'nbc-tonightshow':
+          console.log('called');
+          mpsopts = nbcUrl;
+          mpscall.type = "homepage";
+          mpscall.site = "nbc-tonightshow";
+          mpscall.cat = "the-tonight-show";
+          break;
+        case 'recode-web':
+          mpsopts = nbcUrl;
+          mpscall.topbanner = "topbanner";
+          mpscall.boxad = "boxad";
+          mpscall.type = "frontpage";
+          mpscall.is_content = "";
+          mpscall.section = "homepage";
+          break;
+        case 'telemundo-web':
+          mpsopts = nbcUrl;
+          mpscall.path = "\/";
+          mpscall.title = "home";
+          mpscall.is_content = 0;
+          mpscall.type = "other";
+          mpscall.cat = "home";
+          break;
+        case 'todayshow':
+          mpsopts = nbcUrlnews;
           mpscall.cat = 'homepage';
-          mpscall.path = '/home';
+          mpscall.path = 'homepage';
+          mpscall.is_content = '0';
+          mpscall.type = "cover";
           break;
       }
     }
-
     var mps = mps || {};
     document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
 
-    mps.gptloadCallback = function() {
-      mps.insertAd(mps._select('.top-banner'),'topbanner');
-      //mps.insertAd(mps._select('.right-boxad'),'boxfront1');
+    switch(site) {
+      case 'bravo-web':
+        mps.gptloadCallback = function() {
+          mps.insertAd(mps._select('.top-banner'),'topbanner');
+          mps.insertAd(mps._select('.right-boxad'),'topbox');
+        }
+        break;
+      case 'cnbc-prime':
+        mps.gptloadCallback = function() {
+          mps.insertAd(mps._select('.top-banner'),'topbanner');
+          mps.insertAd(mps._select('.right-boxad'),'topbox');
+        }
+        break;
+      case 'fandango-mobile':
+        mps.gptloadCallback = function() {
+          mps.insertAd(mps._select('.top-banner'),'banner');
+          mps.insertAd(mps._select('.right-boxad'),'bannermid');
+        }
+        break;
+      case 'fandango-web':
+        console.log('selected');
+        mps.gptloadCallback = function() {
+          console.log('callback');
+          mps.insertAd(mps._select('.top-banner'),'topbanner');
+          mps.insertAd(mps._select('.right-boxad'),'boxad');
+        }
+        break;
+      case 'hip2save':
+        mps.gptloadCallback = function() {
+          mps.insertAd(mps._select('.top-banner'),'sideboxone');
+          mps.insertAd(mps._select('.right-boxad'),'sideboxtwo');
+        }
+        break;
+      case 'nbc-tonightshow':
+        mps.gptloadCallback = function() {
+          mps.insertAd(mps._select('.top-banner'),'topleader');
+          mps.insertAd(mps._select('.right-boxad'),'topbox');
+        }
+      break;
+      case 'nbcnews-apps':
+        mps.gptloadCallback = function() {
+          mps.insertAd(mps._select('.top-banner'),'topbanner');
+          mps.insertAd(mps._select('.right-boxad'),'boxfront1');
+        }
+        break;
+      case 'nbcnews-web':
+        mps.gptloadCallback = function() {
+          mps.insertAd(mps._select('.top-banner'),'topbanner');
+          mps.insertAd(mps._select('.right-boxad'),'boxfront1');
+        }
+        break;
+      case 'telemundo-web':
+        mps.gptloadCallback = function() {
+          mps.insertAd(mps._select('.top-banner'),'topbanner');
+          mps.insertAd(mps._select('.right-boxad'),'mosaicadone');
+        }
+        break;
+      case 'todayshow':
+        mps.gptloadCallback = function() {
+          mps.insertAd(mps._select('.top-banner'),'topbanner');
+          mps.insertAd(mps._select('.right-boxad'),'boxflex');
+        }
+        break;
+      case 'todayshow-apps':
+        mps.gptloadCallback = function() {
+          mps.insertAd(mps._select('.top-banner'),'topbanner');
+          mps.insertAd(mps._select('.right-boxad'),'boxflex');
+        }
+        break;
+      case 'recode-web':
+        mps.gptloadCallback = function() {
+          mps.insertAd(mps._select('.top-banner'),'topbanner');
+          mps.insertAd(mps._select('.right-boxad'),'boxad');
+        }
+        break;
     }
   </script>
 
 </head>
 <body>
-<script>
-  mps._ready(function(){
-    var _adLoadCallbackExtend = mps._adloadCallback;
-    mps._adloadCallback = function() {
-      var args = arguments;
-      var result = _adLoadCallbackExtend.apply(this, arguments);
-      var _this = args[0];
-      if(_this._mps._slot != '_oop') {
-        document.getElementById('results').innerHTML += '<li>MPS <strong>' + _this._mps._slot + '</strong> ad code was loaded in <strong>' + _this._mps._elapsed + ' milliseconds</strong>.</li>';
-      }
-
-      return result;
-    };
-  });
-</script>
 
 <nav class="top-bar" data-topbar role="navigation">
   <ul class="title-area">
@@ -137,45 +244,71 @@
 </footer>
 
 <script>
-  // Init site select drop down.
-  var siteSelect = document.getElementById('site-select');
+  window.addEventListener('DOMContentLoaded', function() {
+    // Init site select drop down.
+    var siteSelect = document.getElementById('site-select');
 
-  // Build site select.
-  siteSelect.innerHTML += '<option value="bravo-apps">Bravo Apps</option>';
-  siteSelect.innerHTML += '<option value="bravo-web">Bravo Web</option>';
-  siteSelect.innerHTML += '<option value="cnbc-prime">CNBC Prime</option>';
-  siteSelect.innerHTML += '<option value="eonline-apps">E! Online Apps</option>';
-  siteSelect.innerHTML += '<option value="eonline-web">E! Online Web</option>';
-  siteSelect.innerHTML += '<option value="fandango-apps">Fandango Apps</option>';
-  siteSelect.innerHTML += '<option value="fandango-web">Fandango Web</option>';
-  siteSelect.innerHTML += '<option value="movies-web">Movies Web</option>';
-  siteSelect.innerHTML += '<option value="nbc-apps">NBC Apps</option>';
-  siteSelect.innerHTML += '<option value="nbc-snl">NBC SNL</option>';
-  siteSelect.innerHTML += '<option value="nbc-tonightshow">NBC Tonight Show</option>';
-  siteSelect.innerHTML += '<option value="nbcnews-web">NBC News Web</option>';
-  siteSelect.innerHTML += '<option value="nbcsports-web">NBC Sports Web</option>';
-  siteSelect.innerHTML += '<option value="nhl-web">NHL Web</option>';
-  siteSelect.innerHTML += '<option value="partners">Partners</option>';
-  siteSelect.innerHTML += '<option value="recode-web">Recode Web</option>';
-  siteSelect.innerHTML += '<option value="sandbox">Sandbox</option>';
-  siteSelect.innerHTML += '<option value="telemundo-web">Telemundo Web</option>';
-  siteSelect.innerHTML += '<option value="usa-web">USA Web</option>';
+    // Build site select.
+    siteSelect.innerHTML += '<option value="fandango-web">Fandango</option>';
+    siteSelect.innerHTML += '<option value="nbc-tonightshow">NBC Tonightshow</option>';
+    siteSelect.innerHTML += '<option value="bravo-web">Bravo</option>';
+    siteSelect.innerHTML += '<option value="cnbc-prime">CNBC Prime</option>';
+    siteSelect.innerHTML += '<option value="fandango-mobile">Fandango Mobile</option>';
+    //siteSelect.innerHTML += '<option value="nbc-sports-web">NBC Sports Web</option>';
+    siteSelect.innerHTML += '<option value="recode-web">Recode</option>';
+    siteSelect.innerHTML += '<option value="telemundo-web">Telemundo</option>';
+    siteSelect.innerHTML += '<option value="nbcnews-web">NBC News</option>';
+    siteSelect.innerHTML += '<option value="nbcnews-apps">NBC News Apps</option>';
+    siteSelect.innerHTML += '<option value="todayshow">Todayshow</option>';
+    siteSelect.innerHTML += '<option value="todayshow-apps">Todayshow Apps</option>';
+    siteSelect.innerHTML += '<option value="hip2save">Hip2Save</option>';
+    //siteSelect.innerHTML += '<option value="gardenweb">Garden Web</option>';
 
-  // Set selected site.
-  var siteOption = siteSelect.getElementsByTagName('option');
-  for(var i=0; i<siteOption.length; i++) {
-    if(siteOption[i].value === site) {
-      siteOption[i].selected = true;
+    // Set selected site.
+    var siteOption = siteSelect.getElementsByTagName('option');
+    for(var i=0; i<siteOption.length; i++) {
+      if(siteOption[i].value === site) {
+        siteOption[i].selected = true;
+      }
+    }
+
+    // Change site function.
+    siteSelect.addEventListener('change', function() {
+      localStorage.setItem('mps-site', this.value);
+      // TODO - re init MPS without page refresh.
+      window.location.reload();
+    });
+  });
+</script>
+
+<script>
+function formatAd(name) {
+  var name = name.split('_');
+  name = name[1];
+  return name;
+}
+function printResults() {
+  document.getElementById('results').innerHTML = '';
+  var adLoads = mps._ext._reqs[1];
+  var adsLoaded = 0;
+  for(i in adLoads) {
+    if(i !== 'adload_oop' && i !== 'loadmps' && i !== 'loadgpt') {
+      document.getElementById('results').innerHTML += '<li>MPS <strong>' + formatAd(i) + '</strong> ad code was loaded in <strong>' + adLoads[i] + ' milliseconds</strong>.</li>';
+      adsLoaded++;
     }
   }
-
-  // Change site function.
-  siteSelect.addEventListener('change', function() {
-    localStorage.setItem('mps-site', this.value);
-    // TODO - re init MPS without page refresh.
-    window.location.reload();
-  });
-
+  if(adsLoaded <= 1) {
+    setTimeout(printResults, 500);
+  }
+}
+function checkReq() {
+  if(mps._ext && mps._ext._reqs && mps._ext._reqs[1]) {
+    printResults();
+  } else {
+    setTimeout(checkReq, 500);
+  }
+}
+checkReq();
 </script>
 
 </body>
