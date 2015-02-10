@@ -8,69 +8,28 @@
   <link rel="stylesheet" href="/css/foundation.min.css"/>
   <link rel="stylesheet" href="/css/styles.css"/>
 
-  <style>
-    body {
-      width:3000px;
-    }
-    #someContent {
-      position:absolute;
-      left:1500px;
-      width:200px;
-    }
-    .footer-ad,
-    .footer-ad2 {
-      width:728px;
-      height:90px;
-      background:#f0f0f0;
-    }
-    .right-boxad {
-      width:300px;
-      height:250px;
-      padding:0;
-      background:#f0f0f0;
-    }
-    .right-flexad {
-      position:absolute;
-      top:300px;
-      left:3000px;
-    }
-    .lazy {
-      position:fixed;
-      bottom:20px;
-      right:20px;
-    }
-  </style>
-
   <script type="text/javascript">
 
-  //var mpsopts = {'host':'stage-mps.nbcuni.com'};
-  var mpsopts = {'host':'local.devmps.com'};
+    var mpsopts = {'host':'local.devmps.com'};
+    var mpscall = {
+      "cat": "homepage",
+      "path": "/",
+      "site": "fandango-web",
+      "content_id":128
+    }
 
-  var mpscall = {
-    "cat": "TEST",
-    "path": "TEST/refresh",
-    "site": "sandbox",
-    "content_id":"test-refresh"
-  }
+    var mps = mps || {};
+    document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
 
-  var mps = mps || {};
+    mps._detectDisplay = true;
+    mps._detectVars = {
+      padding: 10
+    }
 
-  mps._detectDisplay = true;
-
-  document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
-
-  </script>
-
-  <script>
     mps.gptloadCallback = function() {
-      mps.insertAd(mps._select('.footer-ad'),'topbanner');
+      //mps.insertAd(mps._select('.top-banner'),'topbanner');
+      mps.insertAd(mps._select('.bottom-banner'),'topbanner');
       mps.insertAd(mps._select('.right-boxad'),'boxad');
-      mps.insertAd(mps._select('.right-flexad'),'flexad');
-    };
-
-    function lazy() {
-      mps._append(mps._select('body'), '<div class="lazy-ad"></div>');
-      mps._append(mps._select('.lazy-ad'),mps.getAd('testadfour'));
     }
   </script>
 
@@ -106,14 +65,16 @@
       <li><a href="/ad-block-ajax">Ad Block AJAX</a></li>
       <li><a href="/ad-scaling">Ad Scaling</a></li>
       <li><a href="/error-tracking">Error Tracking</a></li>
-      <li class="active"><a href="/detect-display">Detect Display</a></li>
+      <li><a href="/detect-display">Detect Display</a></li>
     </ul>
   </section>
 </nav>
 
-<div class="right-flexad"></div>
+<div class="large-12 content m0auto center">
+  <div class="top-banner ad-topbanner mt20 top-ad"></div>
+</div>
 
-<div class="large-12 content">
+<div class="large-12 content m0auto">
 
   <div class="large-4 mt40 right">
     <div class="right-boxad panel p20 right"></div>
@@ -123,7 +84,7 @@
 
     <div class="panel mt20"><ul id="results"></ul></div>
 
-    <h1 class="mt20">MPS Detect Display</h1>
+    <h1 class="mt20">MPS Demo</h1>
 
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tempus metus id accumsan vulputate. Nulla facilisis posuere libero, et laoreet nibh viverra et. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras a elit ac leo accumsan tristique. Vivamus pulvinar risus mauris. Ut eu elit porttitor, egestas massa a, consectetur mauris. Cras accumsan id justo a dapibus. Integer finibus dapibus leo eu accumsan. Nullam risus erat, molestie a mattis in, commodo vitae quam. Ut tempor diam est, sit amet luctus massa rhoncus nec. Nulla tempor vel magna quis ullamcorper. Maecenas urna purus, efficitur vel enim sed, vestibulum consequat libero. In non vehicula felis.<p>
 
@@ -133,7 +94,7 @@
 
     <p>Aliquam nec sapien fringilla, ultricies quam et, pulvinar leo. Duis vehicula non libero ut ornare. Vivamus quis sapien quis purus mollis bibendum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Quisque auctor pulvinar tortor. Morbi sollicitudin eros vitae placerat ultricies. Etiam aliquet ornare magna. Nullam id nibh a ligula lacinia commodo. Cras maximus tincidunt est vel gravida. Curabitur lacinia ultrices ligula at facilisis. Mauris elementum consequat justo, faucibus faucibus enim efficitur id.</p>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tempus metus id accumsan vulputate. Nulla facilisis posuere libero, et laoreet nibh viverra et. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras a elit ac leo accumsan tristique. Vivamus pulvinar risus mauris. Ut eu elit porttitor, egestas massa a, consectetur mauris. Cras accumsan id justo a dapibus. Integer finibus dapibus leo eu accumsan. Nullam risus erat, molestie a mattis in, commodo vitae quam. Ut tempor diam est, sit amet luctus massa rhoncus nec. Nulla tempor vel magna quis ullamcorper. Maecenas urna purus, efficitur vel enim sed, vestibulum consequat libero. In non vehicula felis.<p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tempus metus id accumsan vulputate. Nulla facilisis posuere libero, et laoreet nibh viverra et. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras a elit ac leo accumsan tristique. Vivamus pulvinar risus mauris. Ut eu elit porttitor, egestas massa a, consectetur mauris. Cras accumsan id justo a dapibus. Integer finibus dapibus leo eu accumsan. Nullam risus erat, molestie a mattis in, commodo vitae quam. Ut tempor diam est, sit amet luctus massa rhoncus nec. Nulla tempor vel magna quis ullamcorper. Maecenas urna purus, efficitur vel enim sed, vestibulum consequat libero. In non vehicula felis.<p>
 
     <p>Nam aliquam nec nulla ac luctus. Etiam hendrerit erat non mi congue, lacinia tincidunt massa commodo. Vestibulum nec tempus orci, eget mollis est. Vivamus vel nulla lobortis ipsum condimentum hendrerit vitae at ex. Donec mollis aliquet sollicitudin. Suspendisse quis sem nec ipsum lacinia euismod. Maecenas porta facilisis libero sed facilisis. Praesent fringilla cursus aliquet.</p>
 
@@ -141,24 +102,10 @@
 
     <p>Aliquam nec sapien fringilla, ultricies quam et, pulvinar leo. Duis vehicula non libero ut ornare. Vivamus quis sapien quis purus mollis bibendum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Quisque auctor pulvinar tortor. Morbi sollicitudin eros vitae placerat ultricies. Etiam aliquet ornare magna. Nullam id nibh a ligula lacinia commodo. Cras maximus tincidunt est vel gravida. Curabitur lacinia ultrices ligula at facilisis. Mauris elementum consequat justo, faucibus faucibus enim efficitur id.</p>
 
-    <div class="footer-ad"></div>
-
-     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tempus metus id accumsan vulputate. Nulla facilisis posuere libero, et laoreet nibh viverra et. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras a elit ac leo accumsan tristique. Vivamus pulvinar risus mauris. Ut eu elit porttitor, egestas massa a, consectetur mauris. Cras accumsan id justo a dapibus. Integer finibus dapibus leo eu accumsan. Nullam risus erat, molestie a mattis in, commodo vitae quam. Ut tempor diam est, sit amet luctus massa rhoncus nec. Nulla tempor vel magna quis ullamcorper. Maecenas urna purus, efficitur vel enim sed, vestibulum consequat libero. In non vehicula felis.<p>
-
-    <p>Nam aliquam nec nulla ac luctus. Etiam hendrerit erat non mi congue, lacinia tincidunt massa commodo. Vestibulum nec tempus orci, eget mollis est. Vivamus vel nulla lobortis ipsum condimentum hendrerit vitae at ex. Donec mollis aliquet sollicitudin. Suspendisse quis sem nec ipsum lacinia euismod. Maecenas porta facilisis libero sed facilisis. Praesent fringilla cursus aliquet.</p>
-
-    <p>Mauris risus nulla, porta eget leo in, vestibulum molestie eros. Phasellus eu odio turpis. Vestibulum erat sem, lacinia at odio id, tristique aliquam elit. Nulla a nisl vestibulum, faucibus magna vel, faucibus nunc. Maecenas velit felis, fringilla at ullamcorper nec, porttitor a dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam sed suscipit lectus. Integer et bibendum sapien, sit amet scelerisque diam. Pellentesque rhoncus leo a vestibulum semper. Sed fermentum congue nisl, at venenatis nisi dapibus ut. Aliquam vel mattis nisl.</p>
-
-    <p>Aliquam nec sapien fringilla, ultricies quam et, pulvinar leo. Duis vehicula non libero ut ornare. Vivamus quis sapien quis purus mollis bibendum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Quisque auctor pulvinar tortor. Morbi sollicitudin eros vitae placerat ultricies. Etiam aliquet ornare magna. Nullam id nibh a ligula lacinia commodo. Cras maximus tincidunt est vel gravida. Curabitur lacinia ultrices ligula at facilisis. Mauris elementum consequat justo, faucibus faucibus enim efficitur id.</p>
-
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tempus metus id accumsan vulputate. Nulla facilisis posuere libero, et laoreet nibh viverra et. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras a elit ac leo accumsan tristique. Vivamus pulvinar risus mauris. Ut eu elit porttitor, egestas massa a, consectetur mauris. Cras accumsan id justo a dapibus. Integer finibus dapibus leo eu accumsan. Nullam risus erat, molestie a mattis in, commodo vitae quam. Ut tempor diam est, sit amet luctus massa rhoncus nec. Nulla tempor vel magna quis ullamcorper. Maecenas urna purus, efficitur vel enim sed, vestibulum consequat libero. In non vehicula felis.<p>
+    <div class="bottom-banner"></div>
 
   </div>
 
-</div>
-
-<div id="someContent">
-   <p>Mauris risus nulla, porta eget leo in, vestibulum molestie eros. Phasellus eu odio turpis. Vestibulum erat sem, lacinia at odio id, tristique aliquam elit. Nulla a nisl vestibulum, faucibus magna vel, faucibus nunc. Maecenas velit felis, fringilla at ullamcorper nec, porttitor a dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam sed suscipit lectus. Integer et bibendum sapien, sit amet scelerisque diam. Pellentesque rhoncus leo a vestibulum semper. Sed fermentum congue nisl, at venenatis nisi dapibus ut. Aliquam vel mattis nisl.</p>
 </div>
 
 <footer>
@@ -168,8 +115,6 @@
   </div>
   <script>typeof(mps.writeFooter)=='function' && mps.writeFooter();</script>
 </footer>
-
-<button class="lazy" onclick="lazy()">Lazy Load Ads</button>
 
 </body>
 </html>

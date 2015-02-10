@@ -106,6 +106,20 @@ app.get('/detect-display', function(req, res) {
 
 });
 
+// Fandango.
+app.get('/fandango', function(req, res) {
+
+  res.render('fandango.html');
+
+});
+
+// JS Tree.
+app.get('/jstree', function(req, res) {
+
+  res.render('jstree.html');
+
+});
+
 /***** APIs *****/
 // Webpagetest API.
 app.get('/api/site/', function(req, res) {
