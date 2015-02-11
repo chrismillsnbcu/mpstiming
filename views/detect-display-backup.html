@@ -1,0 +1,394 @@
+<?php if(!empty($gptvars['adunits'])): ?>
+  <?php if(substr($gptvars['dart_mode'],0,10) == 'gpt-simple'):  # GPT SIMPLE URL Mode ?>
+    <script id="mps-gpt-main-<?php print $gptvars['simple_url_correlator_value'] ?>" class="mps-script">
+      mps.adslots={}; mps._gptloaded = true;
+      <?php foreach($gptvars['adunits'] AS $auk => $auv): // Set ad slot list into mps object ?>
+        mps.adslots.<?php print $auv['adunit_slotname'] ?> = '<?php print $auv['adunit_slot_div'] ?>';
+      <?php endforeach; ?>
+      debugmode.log && console.log('[mps:GPT] READY: <?php print $gptvars['dart_mode']; ?> (processing '+mps._queue.gptloaded.length+' queue items) '+mps._elapsed());
+      while(mps._queue.gptloaded.length) {
+        mps._queue.gptloaded.shift().call();
+      }
+      if(typeof(mps.gptloadCallback)=='function') mps.gptloadCallback();
+    </script>
+  <?php else: # GPT Asynchronous/Synchronous Mode ?>
+    <?php $page_category_exclusions = array(); ?>
+    <?php if($loadmode!='more'): ?>
+      <style type="text/css" id="mps-gpt-shared" class="mps-style">.mps-gpt-hidden { display: none; }</style>
+      <script id="mps-gpt-shared" class="mps-script">
+        mps._pending = [];
+        mps._gptloadCallback=function(){
+          for(avk in mps.advars) {if(typeof(mps.advars[avk])=='string' && typeof(gpt[mps.advars[avk]])=='object') mps.adobs.push(gpt[mps.advars[avk]])}
+          mps._adobs[mps._loadset] = mps.adobs;
+          mps._gptloaded = true;
+          debugmode.log && console.log('[mps:GPT] READY: <?php print $gptvars['dart_mode']; ?> (processing '+mps._queue.gptloaded.length+' queue items) '+mps._elapsed());
+          while(mps._queue.gptloaded.length) {
+            mps._queue.gptloaded.shift().call();
+          }
+          if(mps._ext && mps._ext._reqs && mps._ext._reqs[mps._ext._set]) mps._ext._reqs[mps._ext._set]['loadgpt'] = mps._elapsed('',true);
+          if(typeof(mps.gptloadCallback)=='function') mps.gptloadCallback();
+          if(Object.keys && Object.keys(gpt).length === 0) {
+            mps._gptError = true;
+            debugmode.log && console.log('[mps:GPT] GPT did not load correctly, check if ad blocker is enabled.');
+          } else {
+            mps._gptError = false;
+            debugmode.log && console.log('[mps:GPT] GPT is loaded correctly, no ad blocker is enabled.');
+          }
+        };
+        mps._gptloadError = function() {
+          mps._gptError = true;
+          debugmode.log && console.log('[mps:GPT] There was an error loading GPT, check if an ad blocker is enabled.');
+        };
+
+        mps._adloadCallback = function(eo,loadset) {
+          var _refreshed = 0;
+          if(typeof(eo.slot)=='object' && typeof(eo.slot.d)=='object' && typeof(eo.slot.d.pos)=='object' && typeof(eo.slot.d.pos[0])=='string') {
+            var adtarget = (eo.slot && eo.slot.b && typeof(eo.slot.b.d)=='string' && eo.slot.b.d.substring(0,<?php print strlen($gptvars['ad_div_prefix']); ?>)=="<?php print $gptvars['ad_div_prefix']; ?>") ? eo.slot.b.d : false;
+            if(!adtarget) {
+              debugmode.log && console.log('[mps:GPT] ADLOAD Invalid Google Reference!',eo.slot.b.d);
+              return false;
+            }
+            var _adslot = adtarget.replace('<?php print $gptvars['ad_div_prefix']; ?>','').split('-');
+            var adslot = (_adslot[0]!='outofpage') ? _adslot[0] : '_oop';
+            var adload = (parseInt(_adslot[2]) > 0) ? parseInt(_adslot[2]) : 0;
+            if(mps._adloads[adload] && mps._adloads[adload][adslot]) _refreshed = 1;
+            var gptid=eo.slot.j;
+            mps._adloads[adload]=mps._adloads[adload]||{};
+            eo._mps={'_elapsed':mps._elapsed('',true),'advar':mps._advars[adload][adslot],'adslot':mps._adslots[adload][adslot],'gptid':eo.slot.j,'_slot':adslot,'_unit':mps._keys(mps.adunits,adslot).toString()};
+            if(adslot=='_oop') eo._mps._unit='outofpage';
+            var adurlkvs = {};
+            if(typeof(eo.slot.s) == 'string' && eo.slot.s.substring(0,4) == 'http') {
+              var _adurl=eo.slot.s.split('?');
+              if(typeof(_adurl[1]) == 'string') {
+                var _adurlp=_adurl[1].split('&');
+                for(var i in _adurlp) {
+                  if(typeof(_adurlp[i])!='string') continue;
+                  var _adurlpsegs = _adurlp[i].split('=');
+                  if(_adurlpsegs.length === 2) {
+                    adurlkvs[_adurlpsegs[0]] = _adurlpsegs[1];
+                  }
+                }
+              }
+            }
+
+            //eo._mps.kvs = adurlkvs;
+            eo._mps.correlator = adurlkvs['correlator'];
+
+            if(_refreshed) { //refreshed
+              debugmode.log && console.log("[mps:Refresh]",eo._mps.correlator+': '+adslot+': '+mps._elapsed());
+              if(!mps._adloads['R'+adload]) mps._adloads['R'+adload] = {}
+              if(!mps._adloads['R'+adload][adslot]) mps._adloads['R'+adload][adslot] = [];
+              mps._adloads['R'+adload][adslot].push({'elapsed':mps._elapsed('',true),'correlator':eo._mps.correlator,'empty':eo.isEmpty});
+            } else { //loaded
+              debugmode.log && console.log("[mps/GPT] correlator: ",eo._mps.correlator+': '+adslot+': '+mps._elapsed());
+              mps._adloads[adload][eo.slot.d.pos[0]]=eo;
+            }
+            if(mps._ext && mps._ext._reqs && mps._ext._reqs[mps._ext._set]) mps._ext._reqs[mps._ext._set]['adload_'+mps._trim(eo._mps._slot,'_')] = mps._elapsed('',true);
+            debugmode.log && console.log("[mps:GPT] ADLOAD /"+eo._mps._slot+"/ "+(eo.isEmpty ? "(isEmpty) ":"")+mps._elapsed());
+            if(typeof(mps.adloadCallback)=='function') mps.adloadCallback(eo);
+          }
+        };
+        mps._detect = {
+          getBoundingRect: function(s) {
+            var sel = mps._select('#' + s), bRect = document.body.getBoundingClientRect(), elemRect = sel.getBoundingClientRect(),
+            rectY = Math.round(elemRect.top), rectX = Math.round(elemRect.left), offsetY = rectY - bRect.top, offsetX = rectX - bRect.left;
+            return { top: offsetY, left: offsetX };
+          },
+          viewport: function(s) {
+            var win = window, winDocBody = win.document.body, vp = mps._viewport(), vpW = vp[0], vpH = vp[1], elO = this.getBoundingRect(s), elY = elO.top, elX = elO.left,
+            vpPad = mps._detectVars && mps._detectVars.padding ? mps._detectVars.padding : 10, elW = s.offsetWidth ? s.offsetWidth : 0, elH = s.offsetHeight ? s.offsetHeight : 0,
+            elA = elW * elH, scY = win.pageYOffset ? win.pageYOffset : winDocBody.scrollTop, scX = win.pageXOffset ? win.pageXOffset : winDocBody.scrollLeft,
+            vpMinX = elX < ((scX + vpW) - vpPad), vpMaxX = scX < ((elX + elW) + vpPad), vpMinY = elY < ((scY + vpH) - vpPad), vpMaxY = scY < ((elY + elH) + vpPad);
+            return vpMinX && vpMinY && vpMaxX && vpMaxY;
+          },
+          load: function() {
+            var ads = mps._pending; debugmode.log && console.log(ads); if(ads.length > 0) { debugmode.log && console.log('[MPS:DETECT]: pending ads detected.');
+            for(var i in ads) { var _ads = ads[i], gptdiv = mps._adslots[_ads.loadset][_ads.slot];
+            if(gptdiv && mps._detect.viewport(gptdiv)) { mps._detect.remove(_ads.slot); mps._execAd(_ads.slot, _ads.loadset, true);
+              debugmode.log && console.log('[MPS:DETECT]: Ad detected in viewport, remove from pending, call mps._execAd.'); } }
+            }
+          },
+          pending: function(slot) { for(var i in mps._pending) { if(mps._pending[i].slot === slot) { return true; } } return false; },
+          remove: function(slot) { var pen = mps._pending; mps._pending = []; for(var i in pen) { if(pen[i].slot !== slot) { mps._pending.push(pen[i]); } } }
+        };
+        mps._execAd = function(slot,loadset, detect) {
+          var loadset = (parseInt(loadset)>-1) ? parseInt(loadset) : mps._loadset, gptdom;
+          if(!mps._adslots || !mps._adslots[loadset]) {
+            mps._delays.execadready = mps._delays.execadready||250;
+            debugmode.log && console.log('[mps:GPT] DELAYING mps._execAd: Not ready yet ('+slot+','+loadset+')');
+            <?php if($gptvars['dart_mode'] == 'gpt-asynchronous'): ?>setTimeout(function(){<?php endif; ?>
+            mps._execAd(slot,loadset);
+            <?php if($gptvars['dart_mode'] == 'gpt-asynchronous'): ?> },mps._delays.execadready);<?php endif; ?>
+            return false;
+          }
+          var gptdiv = mps._adslots[loadset][slot];
+          if(!slot || !mps.adslots || !gptdiv || !(gptdom=document.getElementById(gptdiv))) {
+            window.console && console.log('[mps:GPT] FAILED mps._execAd');
+            if(mps._detectDisplay && slot !== '_oop') { var detectAd = { 'slot': slot, 'loadset': loadset }; mps._pending.push(detectAd); }
+            return false;
+          }
+          if(mps._slotscalled[loadset][slot]) {
+            window.console && console.log('[mps:GPT] FAILED mps._execAd: Already called '+slot+' on loadset '+loadset);
+            return false;
+          }
+          if(mps._detectDisplay && !mps._detect.viewport(gptdiv) && slot !== '_oop' && !detect) {
+            var detectAd = { 'slot': slot, 'loadset': loadset }; mps._pending.push(detectAd);
+            return false;
+          }
+          <?php if($gptvars['dart_mode'] == 'gpt-asynchronous'): ?>googletag.cmd.push(function() {<?php endif; ?>
+            mps._delays.gptdisplay = mps._delays.gptdisplay||0;
+            if(!parseInt(mps._delays.gptdisplay)) mps._delays.gptdisplay=0;
+            if(mps.slotsdisabled[loadset].indexOf(slot)==-1) {
+              <?php if($gptvars['dart_mode'] == 'gpt-asynchronous'): ?>setTimeout(function(){<?php endif;?>
+                debugmode.log && console.log('[mps:GPT] googletag.display <'+loadset+':'+slot+'> '+mps._elapsed()); //DEBUG
+                googletag.display(gptdiv);
+                mps._slotscalled[loadset][slot] = gptdiv;
+              <?php if($gptvars['dart_mode'] == 'gpt-asynchronous'): ?>},mps._delays.gptdisplay);<?php endif; ?>
+            } else {
+              mps._slotsdisabled[loadset][slot] = gptdiv;
+              mps._classAdd(gptdom,'mps-gpt-hidden');
+              debugmode.log && console.log('[mps:GPT] SKIP googletag.display <'+loadset+':'+slot+'> Responsive Disabled '+mps._elapsed()); //DEBUG
+            }
+          <?php if($gptvars['dart_mode'] == 'gpt-asynchronous'): ?>});<?php endif; ?>
+          return true;
+        };
+        console.log('detect dispay:' + mps._detectDisplay);
+        if(mps._detectDisplay) { debugmode.log && console.log('[MPS:Detect Display]: Enabled.');
+          if(window.addEventListener) { mps._scroll = window.addEventListener('scroll', mps._detect.load); mps._resize = window.addEventListener('resize', mps._detect.load);
+          } else {  mps._scroll = window.attachEvent('onresize', mps._detect.load); mps._resize = window.attachEvent('onscroll', mps._detect.load); } }
+      </script>
+    <?php endif; ?>
+    <?php if(!$gptvars['separate_ad_code'] || $type=='preview'): ?><script id="mps-gpt-boilerplate-<?php print $gptvars['simple_url_correlator_value'] ?>" class="mps-script-<?php print $gptvars['simple_url_correlator_value'] ?>"><?php endif; ?>
+      debugmode.log && console.log('[mps:GPT] INIT: <?php print $gptvars['dart_mode']; ?> '+mps._elapsed());
+      mps._gptloaded = false;
+      mps._adloads=mps._adloads||{};
+      mps._adobs=mps._adobs||{};
+      mps._adslots=mps._adslots||{};
+      mps._advars=mps._advars||{};
+      mps._slotscalled=mps._slotscalled||{};
+      mps._slotscalled[mps._loadset]={};
+      mps._slotsdisabled=mps._slotsdisabled||{};
+      mps._slotsdisabled[mps._loadset]={}
+      mps._rsizemap={};
+      mps.slotsdisabled = mps.slotsdisabled||{};
+      mps.slotsdisabled[mps._loadset]=[];
+      var <?php print $gptvars['ad_slot_var_prefix'] ?>=<?php print $gptvars['ad_slot_var_prefix'] ?>||{};
+      
+      <?php print 'mps._rsizemap['.$mpsid.'] = {};'."\n"; ?>
+      <?php if(is_array($gptvars['responsive_sets'])): ?>mps._rset=mps.getResponsiveSet();<?php endif; ?>
+      //• <?php print strtoupper($gptvars['dart_mode']); ?> Boilerplate
+      <?php if($gptvars['dart_mode'] == 'gpt-asynchronous'): # Asynchronous Boilerplate ?>
+        var googletag = googletag || {};
+        googletag.cmd = googletag.cmd || [];
+        (function(){
+          var gads = document.createElement('script');
+          gads.async = true; gads.type = 'text/javascript';
+          var useSSL = 'https:' == document.location.protocol;
+          gads.src = (mps._gadsurl) ? mps._gadsurl : (useSSL ? 'https:' : 'http:') + '//<?php print $gptvars['gpt_js_uri']; ?>';
+          gads.onload=function(){mps._gptloadCallback();}
+          if(mps._checkua().oldie && mps._checkua().oldie <= 8) {
+            function onloadIE(b,c,a){a=a+1||1;"loaded"==b.readyState||"completed"==b.readyState?c():150<a?clearTimeout(mps.__t.onloadie):mps.__t.onloadie=setTimeout(function(){onloadIE(b,c,a)},100)};
+            onloadIE(gads,function(){mps._gptloadCallback();});
+          } else {
+            gads.onerror=function(){mps._gptloadError();}
+          }
+          var node = document.getElementsByTagName('script')[0];
+          node.parentNode.insertBefore(gads, node);
+        })();
+      <?php else: # Synchronous Boilerplate ?>
+              var googletag = googletag || {};
+        googletag.cmd = googletag.cmd || [];
+        (function() {
+         var useSSL = 'https:' == document.location.protocol;
+         var src = (mps._gadsurl) ? mps._gadsurl : (useSSL ? 'https:' : 'http:') + '//<?php print $gptvars['gpt_js_uri']; ?>';
+         document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
+        })();
+      <?php endif; ?>
+      <?php if(!$gptvars['separate_ad_code'] || $type=='preview'): ?></script><?php endif; ?>
+
+      <?php if(!$gptvars['separate_ad_code'] || $type=='preview'): ?>
+        <script id="mps-gpt-code-<?php print $gptvars['simple_url_correlator_value'] ?>" class="mps-scripts">
+      <?php endif; ?>
+      <?php if($gptvars['dart_mode'] == 'gpt-synchronous'): ?>googletag.cmd.push(function(){mps._gptloadCallback(); });<?php endif; ?>
+      <?php if($gptvars['dart_mode'] == 'gpt-asynchronous' || $gptvars['dart_mode'] == 'gpt-synchronous'): # GPT Function Wrapper (open) ?>
+        googletag.cmd.push(function() {  // [open: Asynchronous Wrapper]
+      <?php endif; ?>
+
+      <?php print $gptvars['gpt_init_js']; # Custom GPT Init JS ?>
+
+      <?php # Figure out whether we want the mobile ad set and exclude those if not
+        $mobile_units = array();
+        foreach($gptvars['mobile_adunits'] AS $k => $v) {
+          if(!empty($gptvars['mobile_adunits'][$k])) {
+            $gptvars['mobile_adunits'][$k] = $gptvars['adunits'][$k];
+            unset($gptvars['adunits'][$k]);
+          }
+        }
+        # If we only want the mobile ad version of this
+        if((!empty($for_mobile) && $for_mobile) || $subset == 'mobile') {
+          $gptvars['adunits'] = $gptvars['mobile_adunits'];
+        }
+      ?>
+      //• GPT Slot Definitions (Unit-Level Targeting & Exclusions) w/ Responsive Map
+      <?php foreach($gptvars['adunits'] AS $k => $adunit): # Loop through all ad units ?>
+        <?php # Swap out [[SLOTNAME]] if its being used in the gpt_adid format
+          $gpt_adid = str_replace(
+            array('[[SLOTNAME]]','[[UNITNAME]]'),
+            array($adunit['adunit_slotname'],$adunit['adunit_clean']),
+            $gptvars['gpt_adid']
+          );
+          $gpt_adid_mobile = str_replace(
+            array('[[SLOTNAME]]','[[UNITNAME]]'),
+            array($adunit['adunit_slotname'],$adunit['adunit_clean']),
+            $gptvars['gpt_adid_mobile']
+          );
+          if(!empty($gptvars['mobile_adunits'][$k])) $gpt_adid = $gpt_adid_mobile;
+
+          if(isset($adunit['targeting']['ifr']) && ($adunit['targeting']['ifr'] == '0' || $adunit['targeting']['ifr'] == 'n')) {
+            $gptvars['disabled_adunits'][$k] = $adunit['adunit_slot_var'];
+            print ($adunit['targeting']['ifr'] == '0') ?
+             '// slot: '.$k.' ['.$adunit['adunit_slotname'].'] » Ad Slot Disabled (ifr=0)'."\n"
+             : '// slot: '.$k.' ['.$adunit['adunit_slotname'].'] » Skipping GPT Init (ifr='.$adunit['targeting']['ifr'].')'."\n";
+            continue;
+          }
+        ?>
+
+        // ADSLOT: <?php print $k.' ['.$adunit['adunit_slotname'].']' ?>
+
+        <?php // Responsive Size Mappings + Responsive Ad Display Conditions
+          $ad_enable_sets = array();
+          $ad_disable_sets = array();
+          $responsive_js_condition = array();
+          $js_condition = '';
+          if(is_array($gptvars['responsive_sets']) && count($adunit['responsive_map']) > 0 && !empty($adunit['responsive_map']['0'])) {
+            print 'mps._rsizemap['.$mpsid.']["'.$adunit['adunit_slotname'].'"] = googletag.sizeMapping()';
+            foreach($gptvars['responsive_sets'] AS $rset => $rsize) { # Create responsive mapping sizes for this ad unit
+              if(isset($adunit['responsive_map'][$rset])) {
+                if(is_array($adunit['responsive_map'][$rset][0])) {
+                  print '.addSize('.json_encode($rsize).','.json_encode($adunit['responsive_map'][$rset]).')';
+                  $ad_enable_sets[] = (string) $rset;
+                } else { # Disable this ad for this size
+                  $ad_disable_sets[] = (string) $rset;
+                }
+              }
+            }
+            print ".build();\n";
+          }
+        ?>
+        <?php print $adunit['adunit_slot_var'] ?>=googletag.defineSlot('<?php echo $gpt_adid; ?>',<?php print json_encode($adunit['sizes']) ?>,'<?php print $adunit['adunit_slot_div'] ?>')
+        <?php if(isset($adunit['category_exclusions']) && is_array($adunit['category_exclusions'])): ?>
+          <?php $page_category_exclusions = $adunit['category_exclusions']; ?>
+          <?php foreach($adunit['unit_category_exclusions'] AS $category_exclusion): # Set category exclusions ?>
+            .setCategoryExclusion("<?php echo $category_exclusion; ?>")
+          <?php endforeach; ?>
+        <?php endif; ?>
+        <?php foreach($adunit['unit_targeting'] AS $tk => $tv): # Set targeting values ?>
+          <?php if(in_array($tk,$gptvars['allowable_targeting_keys'])): ?>
+            <?php if(is_array($tv)) { sort($tv); $tv = json_encode($tv); } else { $tv = '"'.$tv.'"'; } ?>
+              .setTargeting("<?php print $tk ?>",<?php print $tv ?>)  
+          <?php endif; ?>
+        <?php endforeach; ?>
+        <?php if($adunit['collapse'] === 0): # Ad Div: No Collapse ?>
+          .setCollapseEmptyDiv(false);
+        <?php endif; ?>
+        <?php if($adunit['collapse'] === 1): # Ad Div: Collapse If Empty ?>
+          .setCollapseEmptyDiv(true);
+        <?php endif; ?>
+        <?php if($adunit['collapse'] === 2): # Ad Div: Start Collapsed ?>
+          .setCollapseEmptyDiv(true,true);
+        <?php endif; ?>
+        <?php if(count($adunit['responsive_map']) > 0): # Set size mapping if it exists for this ad unit ?>
+          <?php print $adunit['adunit_slot_var'] ?>.defineSizeMapping(<?php print 'mps._rsizemap['.$mpsid.']["'.$adunit['adunit_slotname'].'"]' ?>);
+        <?php endif; ?>
+        <?php print $adunit['adunit_slot_var'] ?>.addService(googletag.pubads());
+        <?php if(count($ad_disable_sets) > 0): ?>
+          if((<?php print json_encode($ad_disable_sets) ?>.indexOf(mps.getResponsiveSet()) > -1)) {
+            mps.slotsdisabled[mps._loadset].push("<?php print $adunit['adunit_slotname'] ?>");
+          }
+        <?php endif; ?>
+      <?php endforeach; ?>
+      // slot: Out Of Page
+      <?php if (!empty($gptvars['use_out_of_page_slot'])): # Handle out of page slots ?>
+        <?php print $gptvars['out_of_page_var'] ?>=googletag.defineOutOfPageSlot("<?php print $gptvars['gpt_adid'] ?>", "<?php print $gptvars['out_of_page_div'] ?>").setTargeting("pos","_oop").addService(googletag.pubads());
+      <?php endif; ?>
+      <?php if($gptvars['enable_single_request_mode'] === 1): ?>
+        //• Enable Single-Request Mode
+        googletag.pubads().enableSingleRequest();
+      <?php endif; ?>
+      if(mps._loadset === 0) googletag.pubads().addEventListener('slotRenderEnded',function(eo){if(typeof(mps._adloadCallback)=='function') mps._adloadCallback(eo,mps._loadset)});
+      <?php if(!empty($gptvars['page_targeting'])): ?>
+        //• Set Page Level Targeting
+        <?php foreach($gptvars['page_targeting'] AS $ptk => $ptv): # Set page targeting ?>
+          <?php if(is_array($ptv)) { sort($ptv); $ptv = json_encode($ptv); } else { $ptv = '"'.$ptv.'"'; } ?>
+          <?php $page_targeting = '"'.$ptk.'",'.$ptv ?>
+          googletag.pubads().setTargeting(<?php print $page_targeting; ?>);
+        <?php endforeach; ?>
+      <?php endif; ?>
+      
+      //• Set Page Level Category Exclusions
+      <?php if(count($gptvars['page_category_exclusions']) > 0): # Set page category exclusions ?>
+        <?php # Build page category exclusion call into a single line
+          $page_category_exclusion_code = '';
+          foreach($gptvars['page_category_exclusions'] AS $page_category_exclusion) {
+            $page_category_exclusion_code .= "\n".'.setCategoryExclusion("'.$page_category_exclusion.'")';
+          }
+          $page_category_exclusion_code = 'googletag.pubads()'.($page_category_exclusion_code).';'."\n";
+        ?>
+        <?php print $page_category_exclusion_code; ?>
+      <?php endif; ?>
+
+      //• Targeting Injection
+      if(typeof(mps._dtparamsappend)=='string' && mps._dtparamsappend.length > 0) {
+        mps._dtparamsappend = mps._trim(mps._dtparamsappend,' ;')+';'.replace(';;',';');
+        var __dtp = mps._trim(mps._dtparamsappend,'; ').split(';');
+        for(var dk in __dtp) {
+          dtparr = __dtp[dk].split('=');
+          if(dtparr.length===2 && dtparr[0].length>0 && dtparr[1].length>0) {
+            googletag.pubads().setTargeting(dtparr[0], dtparr[1]);
+          }
+        }
+      }
+      if(top.__nbcudigitaladops_inject && top.__nbcudigitaladops_inject.getGPT){
+        var _GPT_params = top.__nbcudigitaladops_inject.getGPT();
+        for(var _key in _GPT_params){
+          if(_GPT_params.hasOwnProperty(_key)){
+            googletag.pubads().setTargeting(_key, _GPT_params[_key]);
+          }
+        }
+      }
+
+      //• DFP Publisher Service Initialization
+      <?php if($gptvars['dart_mode'] == 'gpt-asynchronous'): # Asynchronous Rendering Call ?>
+        <?php if(intval($gptvars['disable_initial_load'])===1 || $loadmode=='more'): ?>
+          googletag.pubads().disableInitialLoad();
+        <?php endif; ?>
+        googletag.pubads().enableAsyncRendering();
+      <?php else: # Synchronous Rendering Call ?>
+        googletag.pubads().enableSyncRendering();
+      <?php endif; ?>
+      googletag.enableServices();
+      <?php if($gptvars['dart_mode'] == 'gpt-asynchronous' || $gptvars['dart_mode'] == 'gpt-synchronous'): # GPT Function Wrapper (close) ?>
+        });
+      <?php endif; ?>
+
+      //• MPS Ad References
+      mps.adslots={}; mps.advars={}; mps._advarprefix = '<?php print $gptvars['ad_slot_var_prefix']; ?>'||{}; mps.responsiveslots=mps.responsiveslots||{}; mps.responsiveslots[mps._loadset]={};
+      <?php $gptadvars = array(); ?>
+      <?php foreach($gptvars['adunits'] AS $auk => $auv): // Set ad slot list into mps object ?>
+        mps.adslots.<?php print $auv['adunit_slotname'] ?> = '<?php print $auv['adunit_slot_div'] ?>';
+        mps.advars.<?php print $auv['adunit_slotname'] ?> = '<?php $asv = explode('.',$auv['adunit_slot_var']); print end($asv); ?>';
+        <?php $gptadvars[] = $auv['adunit_slot_var']; ?>
+        <?php if(!empty($auv['responsive_map'])): ?>
+          mps.responsiveslots[mps._loadset]["<?php print $auv['adunit_slotname'] ?>"] = <?php print json_encode($auv['responsive_map']); ?>;
+        <?php endif; ?>
+      <?php endforeach; ?>
+      <?php if (!empty($gptvars['use_out_of_page_slot'])): # Handle out of page slots ?>
+          mps.advars._oop = '<?php print str_replace($gptvars['ad_slot_var_prefix'].'.','',$gptvars['out_of_page_var']); ?>';
+          mps.adslots._oop = '<?php print $gptvars['out_of_page_div'] ?>';
+      <?php endif; ?>
+      mps.adobs=[];
+      mps._adslots[mps._loadset]=mps.adslots;
+      mps._advars[mps._loadset]=mps.advars;
+    <?php if(!$gptvars['separate_ad_code'] || $type=='preview'): ?></script><?php endif; ?>
+  <?php endif; ?>
+<?php endif; ?>

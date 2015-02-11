@@ -67,11 +67,10 @@
 
   <script>
     mps.gptloadCallback = function() {
-      // Not detected.
-      mps.insertAd(mps._select('.right-boxad'),'boxad');
       // Detect Display.
       mps.insertAd(mps._select('.footer-ad'),'topbanner');
       mps.insertAd(mps._select('.right-flexad'),'flexad');
+      mps.insertAd(mps._select('.right-boxad'),'boxad');
     };
 
     function lazy() {
