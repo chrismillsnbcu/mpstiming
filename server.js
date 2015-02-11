@@ -106,6 +106,13 @@ app.get('/detect-display', function(req, res) {
 
 });
 
+// Ad Block Callback.
+app.get('/adblock-callback', function(req, res) {
+
+  res.render('adblock-callback.html');
+
+});
+
 // Fandango.
 app.get('/fandango', function(req, res) {
 
