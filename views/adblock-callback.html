@@ -102,17 +102,13 @@
   };
 
   mps._adBlockCallback = function() {
-    mps._append(mps._select('.right-boxad'), '<iframe href="/iframes/boxad.html" width="300" height="200" border="0" />');
-  }
+    mps._append(mps._select('.right-boxad'), '<iframe frameborder="0" src="/iframes/giftcard.html" width="300" height="200" border="0"></iframe>');
+  };
 
   // MPS Adblock.
   mps._adBlock = function() {
 
     adBlockTimer = adBlockTimer + 1000;
-
-    if(adBlockEnabled === true || mps._gptError === true) {
-      mps._adBlockCallback();
-    }
 
     if(adBlockEnabled === true) {
       mps.demoDisplay('filename');
@@ -120,6 +116,10 @@
       mps.demoDisplay('blocked');
     } else {
       mps.demoDisplay('success');
+    }
+
+    if(adBlockEnabled === true || mps._gptError === true) {
+      mps._adBlockCallback();
     }
 
     // GPT not loaded async, recheck in 1s.

@@ -19,6 +19,7 @@ app.use(router);
 app.use("/css", express.static(__dirname + '/css'));
 app.use("/js", express.static(__dirname + '/js'));
 app.use("/img", express.static(__dirname + '/img'));
+app.use("/iframes", express.static(__dirname + '/iframes'));
 
 var hbs = require('hbs');
 
@@ -107,7 +108,7 @@ app.get('/detect-display', function(req, res) {
 });
 
 // Ad Block Callback.
-app.get('/adblock-callback', function(req, res) {
+app.get('/ad-block-callback', function(req, res) {
 
   res.render('adblock-callback.html');
 
