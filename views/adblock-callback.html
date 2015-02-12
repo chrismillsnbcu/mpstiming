@@ -11,6 +11,7 @@
   <script type="text/javascript">
 
     var env = 'stage-mps.nbcuni.com';
+    //var env = 'local.devmps.com';
 
     var mpscall = {
       "cat": "homepage",
@@ -24,7 +25,9 @@
     };
     var mps = mps || {};
     document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
+  </script>
 
+  <script>
     mps.gptloadCallback = function() {
       mps.insertAd(mps._select('.right-boxad'),'boxad');
     }
@@ -118,15 +121,15 @@
       mps.demoDisplay('success');
     }
 
-    if(adBlockEnabled === true || mps._gptError === true) {
-      mps._adBlockCallback();
-    }
-
     // GPT not loaded async, recheck in 1s.
     if(mps._gptError === undefined && adBlockTimer < 11000) {
       debugmode.log && console.log('mps._gptError is undefined, check again.  Try ' + adBlockTimer / 1000 + ' of 10.');
       setTimeout(mps._adBlock, 1000);
       return false;
+    }
+
+    if(adBlockEnabled === true || mps._gptError === true) {
+      mps._adBlockCallback();
     }
 
   };
