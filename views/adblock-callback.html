@@ -108,7 +108,7 @@
   // MPS Adblock.
   mps._adBlock = function() {
 
-    adBlockTimer = adBlockTimer + 1000;
+   adBlockTimer = adBlockTimer + 1000;
 
     if(adBlockEnabled === true) {
       mps.demoDisplay('filename');
@@ -135,7 +135,6 @@
   var ads = document.createElement('script');
   ads.src = '//'+mpsopts.host + '/js/advertising/ads.js';
   ads.type = 'text/javascript';
-  ads.async = false;
   ads.onload = function() { setTimeout(mps._adBlock, 500);},
   ads.onerror = function() { setTimeout(mps._adBlock, 500);},
   document.getElementsByTagName('head')[0].appendChild(ads);
