@@ -108,6 +108,8 @@
   };
 
   mps._adBlockCallback = function() {
+    var rightBoxAd = mps._select('.right-boxad');
+    rightBoxAd.innerHTML = '';
     mps._append(mps._select('.right-boxad'), '<iframe frameborder="0" src="/iframes/giftcard.html" width="300" height="200" border="0"></iframe>');
   };
 
