@@ -33,10 +33,6 @@
     var mps = mps || {};
     document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
 
-    mps.adBlockCallback = function() {
-      console.log('ad block callback');
-    }
-
     mps.gptloadCallback = function() {
       mps.insertAd(mps._select('.right-boxad'),'boxad');
       //mps.insertAd(mps._select('#test'),'topbanner');
@@ -78,7 +74,7 @@
 
     <h1 class="mt20">MPS Demo</h1>
 
-    <div id="ad-blocker">No data.</div>
+    <div id="ad-blocker"></div>
 
   </div>
 
@@ -93,53 +89,79 @@
 </footer>
 
 <script>
+mps.demoDisplay = function(type) {
+  var msg = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
+  switch(type) {
+    case 'filename':
+      msg = '<div class="alert alert-box">Ad Block or file name ad blocker enabled, no ads should appear.</div>';
+      debugmode.log && console.log('[mps._adBlock: Ad Block or file name ad blocker is enabled.');
+      break;
+    case 'notloaded':
+      msg = '<div class="alert alert-box">GPT is not loaded yet, rechecking in 1s.</div>';
+      debugmode.log && console.log('[mps._adBlock: GPT is not loaded yet, rechecking in 1s.');
+      break;
+    case 'blocked':
+      msg = '<div class="alert alert-box">Ghostery or script blocking is enabled, no ads should appear.</div>';
+      debugmode.log && console.log('[mps._adBlock: Ghostery, Disconnect, or script blocking ad blocker is enabled.');
+      break;
+  }
+  document.getElementById('ad-blocker').innerHTML = msg;
+};
+</script>
+
+<script>
+mps.adBlockCallback = function(ad, selector) {
+  switch(ad) {
+    case 'boxad':
+      var iframeSrc = '<iframe src="/iframes/giftcard.html" width="300" height="250" frameborder="0"></iframe>';
+      break;
+    case 'topbanner':
+      var iframeSrc = '<iframe src="/iframes/giftcardTop.html" width="768" height="90" frameborder="0"></iframe>';
+      break;
+  }
+
+  mps._append(selector, iframeSrc);
+};
+</script>
+
+<script>
   // Adblock detection with external file.
   var adBlockEnabled = true;
   var adBlockTimer = 0;
 
-  mps.demoDisplay = function(type) {
-    var msg = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
-    switch(type) {
-      case 'filename':
-        msg = '<div class="alert alert-box">Ad Block or file name ad blocker enabled, no ads should appear.</div>';
-        debugmode.log && console.log('[mps._adBlock: Ad Block or file name ad blocker is enabled.');
-        break;
-      case 'notloaded':
-        msg = '<div class="alert alert-box">GPT is not loaded yet, rechecking in 1s.</div>';
-        debugmode.log && console.log('[mps._adBlock: GPT is not loaded yet, rechecking in 1s.');
-        break;
-      case 'blocked':
-        msg = '<div class="alert alert-box">Ghostery or script blocking is enabled, no ads should appear.</div>';
-        debugmode.log && console.log('[mps._adBlock: Ghostery, Disconnect, or script blocking ad blocker is enabled.');
-        break;
-    }
-    document.getElementById('ad-blocker').innerHTML = msg;
-  };
-
-  mps._adBlockCallback = function() {
-    var rightBoxAd = mps._select('.right-boxad');
-    rightBoxAd.innerHTML = '';
-    mps._append(mps._select('.right-boxad'), '<iframe frameborder="0" src="/iframes/giftcard.html" width="300" height="250" border="0"></iframe>');
-  };
-
   // MPS Adblock.
   mps._adBlock = function() {
-
     adBlockTimer = adBlockTimer + 1000;
 
-    if(adBlockEnabled === true) {
-      mps.demoDisplay('filename');
-    } else if(mps._gptError === true) {
-      mps.demoDisplay('blocked');
-    } else {
-      mps.demoDisplay('success');
+    if(adBlockEnabled === true || mps._gptError === true) {
+      // Omniture ad blocking variables.
+      //_satellite.setVar('ad blocker enabled', 'ads blocked');
+      //_satellite.track('ad blocker enabled');
+      console.log('mps._slotscalled',mps._slotscalled,'/mps._slotscalled');
+
+      if(typeof mps.adBlockCallback === 'function') {
+        for(var i in mps._slotscalled) {
+          var _slotcalled = mps._slotscalled[i];
+          var adUnitName = Object.keys(_slotcalled).toString();
+          var adUnitSelectorName = _slotcalled[adUnitName];
+          var adUnitSelector = typeof adUnitSelectorName === 'object' ? adUnitSelectorName : mps._select('#' + adUnitSelectorName);
+          mps.adBlockCallback(adUnitName, adUnitSelector);
+        }
+      }    
+
+      // DEMO only.
+      if(adBlockEnabled === true) {
+        mps.demoDisplay('filename');
+      } else {
+        mps.demoDisplay('blocked');
+      }
+      //
     }
 
     // GPT not loaded async, recheck in 1s.
     if(mps._gptError === undefined && adBlockTimer < 11000) {
       debugmode.log && console.log('mps._gptError is undefined, check again.  Try ' + adBlockTimer / 1000 + ' of 10.');
       setTimeout(mps._adBlock, 1000);
-      return false;
     }
 
   };
@@ -148,7 +170,6 @@
   var ads = document.createElement('script');
   ads.src = '//'+mpsopts.host + '/js/advertising/ads.js';
   ads.type = 'text/javascript';
-  ads.async = false;
   ads.onload = function() { setTimeout(mps._adBlock, 500);},
   ads.onerror = function() { setTimeout(mps._adBlock, 500);},
   document.getElementsByTagName('head')[0].appendChild(ads);
