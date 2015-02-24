@@ -73,6 +73,9 @@
       mps._append(mps._select('body'), '<div class="lazy-ad"></div>');
       mps._append(mps._select('.lazy-ad'),mps.getAd('testadfour'));
     }
+    mps.lazyLoadCallback = function(slot, loadset) {
+      console.log('lazyload callback', loadset, slot);
+    }
   </script>
 
 </head>
