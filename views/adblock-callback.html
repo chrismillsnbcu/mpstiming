@@ -145,8 +145,8 @@ mps.localcallback = function(ad, selector) {
   mps.local = {};
   mps.local._interval = 0;
   mps.local._gpt = 0;
-  mps.local._enabled = true;
   mps.local._adSelectors = [];
+  var adBlockEnabled = true;
 
   mps.local._callback = function() {
     debugmode.log && console.log('[MPS Ad Block]: Checking ads are still blank, if not toggle ads and iframes.');
@@ -169,7 +169,7 @@ mps.localcallback = function(ad, selector) {
 
   mps.local._detect = function() {
 
-    if(mps.local._enabled === true || mps._gptError === true) {
+    if(adBlockEnabled === true || mps._gptError === true) {
       debugmode.log && console.log('[MPS Ad Block]: Ad blocker detected.');
       // Omniture ad blocking variables.
       //_satellite.setVar('ad blocker enabled', 'ads blocked');
@@ -194,9 +194,9 @@ mps.localcallback = function(ad, selector) {
       }
 
       // DEMO only.
-      if(mps.local._enabled === true) {
+      if(adBlockEnabled === true) {
         mps.demoDisplay('filename');
-      } else {
+      } else if(mps._gptError === true) {
         mps.demoDisplay('blocked');
       }
       //
