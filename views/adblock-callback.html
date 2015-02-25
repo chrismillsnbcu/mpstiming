@@ -149,7 +149,7 @@ mps.localcallback = function(ad, selector) {
   var adBlockEnabled = true;
 
   mps.local._callback = function() {
-    debugmode.log && console.log('[MPS Ad Block]: Checking ads are still blank, if not toggle ads and iframes.');
+    debugmode.log && console.log('[MPS Ad Block]: Checking ads are still blocked, if not toggle ads and iframes.');
     var localSelectors = mps.local._adSelectors;
     for(var i in localSelectors) {
       if(localSelectors[i].offsetHeight > 0) {
