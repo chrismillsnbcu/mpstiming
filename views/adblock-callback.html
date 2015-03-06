@@ -86,7 +86,7 @@
 
 <script>
 // Client MPS Ad Block Callback Function.
-mps.abcallback = function(ad, selector, adW, adH) {
+mps.abCallback = function(ad, selector, adW, adH) {
   switch(ad) {
     case 'boxad':
       var mpsIframeSrc = '/iframes/giftcard_boxad.html';
@@ -105,22 +105,17 @@ mps.abcallback = function(ad, selector, adW, adH) {
   var adBlockEnabled = true;
   mps.ab = {
     _detect: function() {
-      // Ad blocker detected.
       if(adBlockEnabled === true || mps._gptError === true) {
         debugmode.log && console.log('[MPS Ab]: Ad blocker detected.');
         // Omniture ad blocking variables.
         //_satellite.setVar('ad blocker enabled', 'ads blocked');
         //_satellite.track('ad blocker enabled');
 
-        // Ad block callback defined.
-        if(typeof mps.abcallback === 'function') {
-          console.log('ad block function exists');
+        if(typeof mps.abCallback === 'function') {
           debugmode.log && console.log('[MPS Ab]: Ad block callback detected, load client specified static iframes.');
           
-          // Get ad sizes.
           $.get('http://' + mps.pagevars.mpsurl + '/request/describe/' + mps.pagevars.instance).success(function(d) {
             var abData = d.adunits;
-            // Send ad unit name, selector parent, and ad unit size to mps.abcallback().
             var mpsSlotsCalled = mps._slotscalled;
             for(var i in mpsSlotsCalled) {
               for(var j in mpsSlotsCalled[i]) {
@@ -135,7 +130,7 @@ mps.abcallback = function(ad, selector, adW, adH) {
                       var _adW = _sizes[0];
                       var _adH = _sizes[1];
                       mps._classAdd(_localSelector,'mps-local');
-                      mps.abcallback(j, _localSelectorParent, _adW, _adH);
+                      mps.abCallback(j, _localSelectorParent, _adW, _adH);
                       mps.ab._selectors.push(_localSelector);
                       if(mps._ext && mps._ext._reqs && mps._ext._reqs[mps._ext._set]) mps._ext._reqs[mps._ext._set]['adblocked_'+mps._trim(j,'_')] = mps._elapsed('',true);
                       break;
@@ -150,14 +145,6 @@ mps.abcallback = function(ad, selector, adW, adH) {
         };
       }
 
-      // DEMO only.
-      if(adBlockEnabled === true) {
-        mps.ab._demo('filename');
-      } else if(mps._gptError === true) {
-        mps.ab._demo('blocked');
-      }
-      //
-
       mps.ab._gpt += 1;
       // GPT not loaded async, recheck in 1s.
       if(mps._gptError === undefined && mps.ab._gpt < 11) {
@@ -165,9 +152,7 @@ mps.abcallback = function(ad, selector, adW, adH) {
         setTimeout(mps.ab._detect, 1000);
       }
     },
-    // If ad appears, hide static iframe and show ad.
     _listener: function() {
-      console.log('listener called');
       debugmode.log && console.log('[MPS Ab]: Checking ads are still blocked, if not toggle ads and iframes.');
       var localSelectors = mps.ab._selectors;
       for(var i in localSelectors) {
@@ -188,26 +173,6 @@ mps.abcallback = function(ad, selector, adW, adH) {
     _interval: 0,
     _gpt: 0,
     _selectors: []
-  }
-
-  // Demo messaging.
-  mps.ab._demo = function(type) {
-    var msg = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
-    switch(type) {
-      case 'filename':
-        msg = '<div class="alert alert-box">Ad Block or file name ad blocker enabled, no ads should appear.</div>';
-        debugmode.log && console.log('[mps._adBlock: Ad Block or file name ad blocker is enabled.');
-        break;
-      case 'notloaded':
-        msg = '<div class="alert alert-box">GPT is not loaded yet, rechecking in 1s.</div>';
-        debugmode.log && console.log('[mps._adBlock: GPT is not loaded yet, rechecking in 1s.');
-        break;
-      case 'blocked':
-        msg = '<div class="alert alert-box">Ghostery or script blocking is enabled, no ads should appear.</div>';
-        debugmode.log && console.log('[mps._adBlock: Ghostery, Disconnect, or script blocking ad blocker is enabled.');
-        break;
-    }
-    document.getElementById('ad-blocker').innerHTML = msg;
   };
 
   // Ad Block Plus will block this file.
@@ -218,6 +183,28 @@ mps.abcallback = function(ad, selector, adW, adH) {
   ads.onerror = function() { setTimeout(mps.ab._detect, 500);},
   document.getElementsByTagName('head')[0].appendChild(ads);
 
+</script>
+
+<script>
+// Demo messaging.
+mps.ab._demo = function(type) {
+  var msg = '<div class="success alert-box">Ad blocker disabled, you should see ads.</div>';
+  switch(type) {
+    case 'filename':
+      msg = '<div class="alert alert-box">Ad Block or file name ad blocker enabled, no ads should appear.</div>';
+      debugmode.log && console.log('[mps._adBlock: Ad Block or file name ad blocker is enabled.');
+      break;
+    case 'notloaded':
+      msg = '<div class="alert alert-box">GPT is not loaded yet, rechecking in 1s.</div>';
+      debugmode.log && console.log('[mps._adBlock: GPT is not loaded yet, rechecking in 1s.');
+      break;
+    case 'blocked':
+      msg = '<div class="alert alert-box">Ghostery or script blocking is enabled, no ads should appear.</div>';
+      debugmode.log && console.log('[mps._adBlock: Ghostery, Disconnect, or script blocking ad blocker is enabled.');
+      break;
+  }
+  document.getElementById('ad-blocker').innerHTML = msg;
+};
 </script>
 
 </body>
