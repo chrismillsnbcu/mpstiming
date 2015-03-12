@@ -107,14 +107,9 @@ mps.abCallback = function(ad, selector, adW, adH) {
   var adBlockEnabled = true;
   mps.ab = {
     _callback: function(loadset) {
-      console.log(loadset);
       if(!loadset) loadset = 0;
-      console.log(loadset);
       if(mps.ab._loadsets.indexOf(loadset) === -1) {
-        console.log('loadset not found in mps.ab._loadsets', mps.ab._loadsets);
-        console.log(mps._slotscalled);
         var mpsSlotsCalled = mps._slotscalled[loadset];
-        console.log(mpsSlotsCalled);
         for(var j in mpsSlotsCalled) {
           var _localSelector = mps._select('#' + mpsSlotsCalled[j]);
           // Double check ad unit height is zero.
@@ -191,15 +186,7 @@ mps.abCallback = function(ad, selector, adW, adH) {
   };
 
   // Listen for additional loadsets until MPS ab loadset functionality is in prod.
-  mps.ab.loadsets = function() {
-    console.log('mps.ab.loadsets listener');
-    console.log(mps.ab._loadsets);
-    for(var i in mps._slotscalled) {
-      if(i > 0 && mps.ab._loadsets.indexOf(i) === -1) {
-        mps.ab._callback(i);
-        console.log('Not first loadset, loadset not called before');
-      }
-    }
+  mps.ab.loadsets = function() { for(var i in mps._slotscalled) { if(i > 0 && mps.ab._loadsets.indexOf(i) === -1) { mps.ab._callback(i); } }
   };
 
   // Ad Block Plus will block this file.
