@@ -25,6 +25,7 @@
 
     mps.gptloadCallback = function() {
       mps.insertAd(mps._select('.right-boxad'),'boxad');
+      mps.insertAd(mps._select('.top-banner'), 'topbanner');
       //mps.insertAd(mps._select('.right-boxad'),'skyscraperad');
     }
   </script>
@@ -72,8 +73,9 @@
 </div>
 
 <div class="panel">
-  <p>Legacy</p>
-  <div><script>document.write(mpsGetAd("Top Banner"));</script></div>
+  <!--<p>Legacy</p>
+  <div><script>document.write(mpsGetAd("Top Banner"));</script></div>-->
+  <div class="top-banner"></div>
 </div>
 
 <footer>
@@ -104,6 +106,39 @@ mps.abCallback = function(ad, selector, adW, adH) {
 <script>
   var adBlockEnabled = true;
   mps.ab = {
+    _callback: function(loadset) {
+      console.log(loadset);
+      if(!loadset) loadset = 0;
+      console.log(loadset);
+      if(mps.ab._loadsets.indexOf(loadset) === -1) {
+        console.log('loadset not found in mps.ab._loadsets', mps.ab._loadsets);
+        console.log(mps._slotscalled);
+        var mpsSlotsCalled = mps._slotscalled[loadset];
+        console.log(mpsSlotsCalled);
+        for(var j in mpsSlotsCalled) {
+          var _localSelector = mps._select('#' + mpsSlotsCalled[j]);
+          // Double check ad unit height is zero.
+          if(_localSelector.offsetHeight === 0) {
+            for(var k in mps.ab._sizes) {
+              if(j === mps.ab._sizes[k].slot) {
+                var _localSelectorParent = _localSelector.parentNode;
+                var _sizes = mps.ab._sizes[k].sizes[0];
+                _sizes = _sizes.split('x');
+                var _adW = _sizes[0];
+                var _adH = _sizes[1];
+                mps._classAdd(_localSelector,'mps-local');
+                mps.abCallback(j, _localSelectorParent, _adW, _adH);
+                mps.ab._selectors.push(_localSelector);
+                if(mps._ext && mps._ext._reqs && mps._ext._reqs[mps._ext._set]) mps._ext._reqs[mps._ext._set]['adblocked_'+mps._trim(j,'_')] = mps._elapsed('',true);
+                break;
+              }
+            }
+          }
+        }
+      }
+      mps.ab._loadsets.push(loadset);
+      if(loadset === 0) { setInterval(mps.ab.loadsets, 1000); }
+    },
     _detect: function() {
       if(adBlockEnabled === true || mps._gptError === true) {
         debugmode.log && console.log('[MPS Ab]: Ad blocker detected.');
@@ -115,36 +150,13 @@ mps.abCallback = function(ad, selector, adW, adH) {
           debugmode.log && console.log('[MPS Ab]: Ad block callback detected, load client specified static iframes.');
           
           $.get('http://' + mps.pagevars.mpsurl + '/request/describe/' + mps.pagevars.instance).success(function(d) {
-            var abData = d.adunits;
-            var mpsSlotsCalled = mps._slotscalled;
-            for(var i in mpsSlotsCalled) {
-              for(var j in mpsSlotsCalled[i]) {
-                var _localSelector = mps._select('#' + mpsSlotsCalled[i][j]);
-                // Double check ad unit height is zero.
-                if(_localSelector.offsetHeight === 0) {
-                  for(var k in abData) {
-                    if(j === abData[k].slot) {
-                      var _localSelectorParent = _localSelector.parentNode;
-                      var _sizes = abData[k].sizes[0];
-                      _sizes = _sizes.split('x');
-                      var _adW = _sizes[0];
-                      var _adH = _sizes[1];
-                      mps._classAdd(_localSelector,'mps-local');
-                      mps.abCallback(j, _localSelectorParent, _adW, _adH);
-                      mps.ab._selectors.push(_localSelector);
-                      if(mps._ext && mps._ext._reqs && mps._ext._reqs[mps._ext._set]) mps._ext._reqs[mps._ext._set]['adblocked_'+mps._trim(j,'_')] = mps._elapsed('',true);
-                      break;
-                    }
-                  }
-                }
-              }
-            }
+              mps.ab._sizes = d.adunits;
+              mps.ab._callback();
           }).error(function(d) {
             debugmode.log && console.log('[MPS Ab]: There was an error getting ad sizes.');
           });
         };
       }
-
       mps.ab._gpt += 1;
       // GPT not loaded async, recheck in 1s.
       if(mps._gptError === undefined && mps.ab._gpt < 11) {
@@ -165,6 +177,7 @@ mps.abCallback = function(ad, selector, adW, adH) {
             var selectorItem = mps.ab._selectors.indexOf(localSelectors[i]);
             mps.ab._selectors.splice(selectorItem, 1);
           }
+          clearInterval(mpsAbLoadsets);
         }
       }
       mps.ab._interval += 1;
@@ -172,7 +185,21 @@ mps.abCallback = function(ad, selector, adW, adH) {
     },
     _interval: 0,
     _gpt: 0,
-    _selectors: []
+    _sizes: {},
+    _selectors: [],
+    _loadsets: []
+  };
+
+  // Listen for additional loadsets until MPS ab loadset functionality is in prod.
+  mps.ab.loadsets = function() {
+    console.log('mps.ab.loadsets listener');
+    console.log(mps.ab._loadsets);
+    for(var i in mps._slotscalled) {
+      if(i > 0 && mps.ab._loadsets.indexOf(i) === -1) {
+        mps.ab._callback(i);
+        console.log('Not first loadset, loadset not called before');
+      }
+    }
   };
 
   // Ad Block Plus will block this file.
@@ -182,7 +209,6 @@ mps.abCallback = function(ad, selector, adW, adH) {
   ads.onload = function() { setTimeout(mps.ab._detect, 500);},
   ads.onerror = function() { setTimeout(mps.ab._detect, 500);},
   document.getElementsByTagName('head')[0].appendChild(ads);
-
 </script>
 
 <script>
@@ -205,7 +231,14 @@ mps.ab._demo = function(type) {
   }
   document.getElementById('ad-blocker').innerHTML = msg;
 };
+
+
+function loadMore() {
+  mps.makeRequest('more');
+}
 </script>
+
+<div class="button" onclick="loadMore()" style="position:fixed;bottom:30px;right:30px;">Load More</div>
 
 </body>
 </html>
