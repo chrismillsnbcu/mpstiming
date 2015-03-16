@@ -131,8 +131,7 @@ mps.abCallback = function(ad, selector, adW, adH) {
           }
         }
       }
-      mps.ab._loadsets.push(loadset);
-      if(loadset === 0) { setInterval(mps.ab.loadsets, 1000); }
+      mps.ab._loadsets.push(loadset); if(loadset === 0) { setInterval(mps.ab.loadsets, 1000); }
     },
     _detect: function() {
       if(adBlockEnabled === true || mps._gptError === true) {
@@ -143,7 +142,6 @@ mps.abCallback = function(ad, selector, adW, adH) {
 
         if(typeof mps.abCallback === 'function') {
           debugmode.log && console.log('[MPS Ab]: Ad block callback detected, load client specified static iframes.');
-          
           $.get('http://' + mps.pagevars.mpsurl + '/request/describe/' + mps.pagevars.instance).success(function(d) {
               mps.ab._sizes = d.adunits;
               mps.ab._callback();
@@ -175,19 +173,12 @@ mps.abCallback = function(ad, selector, adW, adH) {
           clearInterval(mpsAbLoadsets);
         }
       }
-      mps.ab._interval += 1;
-      if(mps.ab._interval < 11) { setTimeout(mps.ab._listener, 1000); }
+      mps.ab._interval += 1; if(mps.ab._interval < 11) { setTimeout(mps.ab._listener, 1000); }
     },
-    _interval: 0,
-    _gpt: 0,
-    _sizes: {},
-    _selectors: [],
-    _loadsets: []
-  };
+    _interval: 0, _gpt: 0, _sizes: {}, _selectors: [], _loadsets: [] };
 
   // Listen for additional loadsets until MPS ab loadset functionality is in prod.
-  mps.ab.loadsets = function() { for(var i in mps._slotscalled) { if(i > 0 && mps.ab._loadsets.indexOf(i) === -1) { mps.ab._callback(i); } }
-  };
+  mps.ab.loadsets = function() { for(var i in mps._slotscalled) { if(i > 0 && mps.ab._loadsets.indexOf(i) === -1) { mps.ab._callback(i); } }};
 
   // Ad Block Plus will block this file.
   var ads = document.createElement('script');
