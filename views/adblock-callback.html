@@ -18,14 +18,15 @@
       "site": "fandango-web"
     }
     var mpsopts={
-      "host":'mps.nbcuni.com'
+      //"host":'mps.nbcuni.com'
+      "host":"local.devmps.com"
     };
     var mps = mps || {};
     document.write('<scr'+'ipt id="mps-ext-load" src="//'+mpsopts.host+'/fetch/ext/load-'+mpscall.site+'.js"></scr'+'ipt>');
 
     mps.gptloadCallback = function() {
       mps.insertAd(mps._select('.right-boxad'),'boxad');
-      mps.insertAd(mps._select('.top-banner'), 'topbanner');
+      //mps.insertAd(mps._select('.top-banner'), 'topbanner');
       //mps.insertAd(mps._select('.right-boxad'),'skyscraperad');
     }
   </script>
@@ -73,8 +74,8 @@
 </div>
 
 <div class="panel">
-  <!--<p>Legacy</p>
-  <div><script>document.write(mpsGetAd("Top Banner"));</script></div>-->
+  <p>Legacy</p>
+  <div><script>document.write(mpsGetAd("Top Banner"));</script></div>
   <div class="top-banner"></div>
 </div>
 
@@ -106,32 +107,22 @@ mps.abCallback = function(ad, selector, adW, adH) {
 <script>
   var adBlockEnabled = true;
   mps.ab = {
-    _callback: function(loadset) {
-      if(!loadset) loadset = 0;
-      if(mps.ab._loadsets.indexOf(loadset) === -1) {
-        var mpsSlotsCalled = mps._slotscalled[loadset];
-        for(var j in mpsSlotsCalled) {
-          var _localSelector = mps._select('#' + mpsSlotsCalled[j]);
-          // Double check ad unit height is zero.
-          if(_localSelector.offsetHeight === 0) {
-            for(var k in mps.ab._sizes) {
-              if(j === mps.ab._sizes[k].slot) {
-                var _localSelectorParent = _localSelector.parentNode;
-                var _sizes = mps.ab._sizes[k].sizes[0];
-                _sizes = _sizes.split('x');
-                var _adW = _sizes[0];
-                var _adH = _sizes[1];
-                mps._classAdd(_localSelector,'mps-local');
-                mps.abCallback(j, _localSelectorParent, _adW, _adH);
-                mps.ab._selectors.push(_localSelector);
-                if(mps._ext && mps._ext._reqs && mps._ext._reqs[mps._ext._set]) mps._ext._reqs[mps._ext._set]['adblocked_'+mps._trim(j,'_')] = mps._elapsed('',true);
-                break;
-              }
-            }
+    _callback: function(slot, loadset) {
+      var _localSelector = mps._select('#' + mps._slotscalled[loadset][slot]);
+      // Double check ad unit height is zero.
+      if(_localSelector.offsetHeight === 0) {
+        for(var k in mps.ab._sizes) {
+          if(slot === mps.ab._sizes[k].slot) {
+            var _localSelectorParent = _localSelector.parentNode, _sizes = mps.ab._sizes[k].sizes[0];
+            _sizes = _sizes.split('x'); var _adW = _sizes[0], _adH = _sizes[1];
+            mps._classAdd(_localSelector,'mps-local');
+            mps.abCallback(slot, _localSelectorParent, _adW, _adH);
+            mps.ab._selectors.push(_localSelector);
+            if(mps._ext && mps._ext._reqs && mps._ext._reqs[mps._ext._set]) mps._ext._reqs[mps._ext._set]['adblocked_'+mps._trim(slot,'_')] = mps._elapsed('',true);
+            break;
           }
         }
       }
-      mps.ab._loadsets.push(loadset); if(loadset === 0) { setInterval(mps.ab.loadsets, 1000); }
     },
     _detect: function() {
       if(adBlockEnabled === true || mps._gptError === true) {
@@ -143,8 +134,7 @@ mps.abCallback = function(ad, selector, adW, adH) {
         if(typeof mps.abCallback === 'function') {
           debugmode.log && console.log('[MPS Ab]: Ad block callback detected, load client specified static iframes.');
           $.get('http://' + mps.pagevars.mpsurl + '/request/describe/' + mps.pagevars.instance).success(function(d) {
-              mps.ab._sizes = d.adunits;
-              mps.ab._callback();
+              mps.ab._sizes = d.adunits; for(var i in mps._slotscalled) { for(var j in mps._slotscalled[i]) { if(j !== '_oop') mps.ab._callback(j, i); }}
           }).error(function(d) {
             debugmode.log && console.log('[MPS Ab]: There was an error getting ad sizes.');
           });
@@ -176,9 +166,6 @@ mps.abCallback = function(ad, selector, adW, adH) {
       mps.ab._interval += 1; if(mps.ab._interval < 11) { setTimeout(mps.ab._listener, 1000); }
     },
     _interval: 0, _gpt: 0, _sizes: {}, _selectors: [], _loadsets: [] };
-
-  // Listen for additional loadsets until MPS ab loadset functionality is in prod.
-  mps.ab.loadsets = function() { for(var i in mps._slotscalled) { if(i > 0 && mps.ab._loadsets.indexOf(i) === -1) { mps.ab._callback(i); } }};
 
   // Ad Block Plus will block this file.
   var ads = document.createElement('script');
